@@ -1,9 +1,13 @@
+require 'assimilate/project'
 module Assimilate::Commands
   class Build < ::Assimilate::Command
-    def initialize
+    def initialize( opts = {} )
+      @directory = opts['directory']
     end
     def run_command
-      puts "Running Build command"
+      Dir.chdir( @directory ) do
+        Assimilate::Project.run( File.join( @directory, "Assimilate" ) )
+      end
     end
   end
 end

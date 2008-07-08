@@ -53,6 +53,14 @@ module Assimilate
     sp = ::File.join(sp, *args) if args
   end
 
+  def self.project
+    @project
+  end
+  
+  def self.project=( p )
+    @project = p
+  end
+
 end
 require 'assimilate/version'
 require 'assimilate/command_line'

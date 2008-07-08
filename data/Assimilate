@@ -2,9 +2,8 @@
 # This is Assimilate control file
 #
 
-Assimilate.new do |a|
-  # these are the defaults and are relative to the directory this file lives in.
-  # a.recipe_dir  = "recipes"
-  # a.build_dir   = "build"
-  # a.install_dir = "fakeroot"
-end
+# these are the defaults and are relative to the directory this file lives in.
+target     "ruby"
+recipe_dir "recipes"
+build_dir  "build"
+install_dir "fakeroot"

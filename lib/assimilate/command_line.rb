@@ -55,7 +55,7 @@ module Assimilate
         validate { |d| File.exist?( File.join( d, "Assimilate") ) }
       }
 
-      run { Assimilate::Commands::Build.new.run }
+      run { Assimilate::Commands::Build.new( CommandLine.params_to_options( params ) ).run }
     }
   }
 
