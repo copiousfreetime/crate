@@ -1,10 +1,14 @@
-#
 # Recipe is heavily inspired by HookGet 
 #
 #   http://github.com/chneukirchen/rubyports/tree/master/hook-get.rb
 #
+require 'open-uri'
+require 'digest/md5'
+require 'digest/sha1'
+require 'progressbar'
 module Assimilate
   class Recipe
+    class ChecksumError < ::StandardError; end
     def self.run(file)
       new.run( file )
     end
@@ -17,7 +21,8 @@ module Assimilate
     attr_reader :install_commands
     attr_reader :dependencies
     attr_reader :pkg_dir
-    attr_reader :url
+    attr_reader :uri
+    attr_reader :local_source
 
     def initialize
       @build_commands   = []
@@ -33,7 +38,14 @@ module Assimilate
         self.instance_eval File.read(file), file, 1
         deploy
       end
+      self
     end
+
+    def log( msg )
+      prefix = "%-15s" % "#{name}-#{version}"
+      puts "#{prefix} => #{msg}"
+    end
+
 
     def recipe_dir
       Assimilate.project.recipe_dir
@@ -58,18 +70,27 @@ module Assimilate
       @install_commands << lambda{ Dir.chdir( pkg_dir ) { sh(*args) } } 
     end
 
-    def upstream_source( url )
-      @url = url
+    def source( url )
+      @uri = URI.parse( url )
+      @local_source = File.join( build_dir, File.basename( uri.path ) )
     end
     
     def package(name, version=nil)
       @name    = name
       @version = version
-      @pkg_dir = File.join( build_dir, "#{name + ( version ? "-#{version}" : "" ) }" )
+      @pkg_dir = File.join( self.build_dir, "#{name + ( version ? "-#{version}" : "" ) }" )
     end
 
     def depend(name, version)
-      @dependencies << { :name => name, :version => version }
+      @dependencies << { 'name' => name, 'version' => version }
+    end
+
+    def md5( checksum )
+      @checksum = [ ::Digest::MD5.new , checksum ]
+    end
+
+    def sha1( checksum )
+      @checksum = [ ::Digest::SHA1.new, checksum ]
     end
 
     private
@@ -92,21 +113,25 @@ module Assimilate
     end
 
     def deploy
+      log "Installing recipe"
       satisfy_dependencies
-      download
-      verify
+      download_and_verify
       unpack
       patch
+      log "Building"
       until @build_commands.empty?
         l = @build_commands.shift
-        l.call
+        #l.call
       end
 
+      log "Installing into fakeroot"
       until @install_commands.empty?
         l = @install_commands.shift
-        l.call
+        #l.call
       end
-      File.open( File.join( pkgpath, ".installed") , "w") { |f| f.puts Time.now }
+      log "Marking installed"
+      h = { 'name' => self.name, 'version' => self.version, 'installed_at' => Time.now }
+      File.open( File.join( build_dir, ".installed") , "w") { |f| f.puts h.to_yaml }
     end
 
 
@@ -115,29 +140,58 @@ module Assimilate
       @dependencies.each do |dep|
         satisfied = false
         installed.each do |recipe|
-          if (recipe[:name] == dep[:name]) and  (dep[:version] == recipe[:version] ) then
+          if (recipe['name'] == dep['name']) and  (dep['version'] == recipe['version'] ) then
             satisfied = true
             break
           end
         end
-        Recipe.run File.join( recipe_dir, "#{dep[:name]}.recipe" ) unless satisfied
+        unless satisfied
+          log "Installing dependency #{dep['name']}"
+          Recipe.run File.join( recipe_dir, "#{dep['name']}.recipe" )
+        end
       end
     end
 
-    def download
-      puts "fetching #{url}"
+
+    def download_and_verify
+      log "Downloading #{uri.to_s}"
+      return if File.exist?( local_source ) and verify( :quiet => true ) 
+
+      progress_bar = nil
+      pbar = nil 
+      File.open( local_source , "w" ) do |outf|
+        uri.open( :content_length_proc => lambda { |t| pbar = ::ProgressBar.new( File.basename( local_source ), t ) if  t && 0 < t  },  
+                  :progress_proc       => lambda { |s| pbar.set s if pbar } ) do |inf|
+          outf.write inf.read
+        end 
+        puts
+      end
+
+      verify!
     end
 
-    def verify
-      puts "verifying #{url} if there is a checksum"
+    def verify( opts = {} )
+      log "Verifiying" unless opts[:quiet]
+      if @checksum and @checksum.size == 2 then
+        digest = @checksum.first
+        should_be = @checksum.last
+        result = digest.hexdigest( IO.read( local_source ) )
+        return should_be == result
+      else 
+        return true
+      end
+    end
+
+    def verify!
+      raise ChecksumError, "#{local_source} does not have the correct checksum" unless verify
     end
 
     def unpack
-      puts "unpacking #{url}"
+      log "unpacking #{local_source}"
     end
     
     def patch
-      puts "patching #{url}"
+      log "patching #{local_source}"
     end
   end
 end

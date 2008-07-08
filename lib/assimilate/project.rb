@@ -1,4 +1,5 @@
 require 'assimilate/recipe'
+require 'yaml'
 module Assimilate
   class Project
     class << self
@@ -26,12 +27,12 @@ module Assimilate
       installed = []
       Dir.entries( build_dir ).each do |d|
         next if d.index(".") == 0
-        if File.exist?( File.join( build_dir, d, ".installed") ) then
-          r = Recipe.new
-          r.instance_eval File.read( recipe_dir, "#{d}.recipe" )
-          installed << { :name => r.name, :version => r.version }
+        installed_file = File.join( build_dir, d, ".installed" )
+        if File.exist?( installed_file ) then
+          installed << YAML::load_file( installed_file ) 
         end
       end
+      return installed
     end
 
     def default_target( arg )
