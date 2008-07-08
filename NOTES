@@ -1,0 +1,9 @@
+1) Put in build process to download and fetch the appropriate versions of the
+   statically required libraries 
+
+2) pack all ruby source code that is installed and put it into the rubylibs
+   table
+
+3) generate a bootstrap piece of C code to overload the ruby main and launch
+   into the basic code, running through the bootstrap table and evalling each
+   piece of code as it goes through the system.

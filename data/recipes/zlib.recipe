@@ -1,0 +1,6 @@
+package "zlib", "1.2.3"
+tar_gz "http://www.zlib.net/zlib-1.2.3.tar.gz"
+md5 "debc62758716a169df9f62e6ab2bc634"
+build "./configure --prefix=#{File.join( '/', 'usr' )}"
+build "make install prefix=#{File.join( ENV['DEST_DIR'], 'usr' )}"
+build "make distclean"

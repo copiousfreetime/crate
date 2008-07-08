@@ -55,3 +55,4 @@ module Assimilate
 
 end
 require 'assimilate/version'
+require 'assimilate/command_line'
