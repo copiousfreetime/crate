@@ -6,6 +6,9 @@ require 'open-uri'
 require 'digest/md5'
 require 'digest/sha1'
 require 'progressbar'
+require 'archive/tar/minitar'
+require 'zlib'
+
 module Assimilate
   class Recipe
     class ChecksumError < ::StandardError; end
@@ -56,18 +59,20 @@ module Assimilate
     end
 
     def sh(*args)
-      @build_commands << lambda {
-        puts args.join(" ")
-        system(*args)
-      }
+      lambda do
+        Dir.chdir( pkg_dir ) do
+          log args.join(" ")
+          system(*args)
+        end
+      end
     end
 
     def build(*args)
-      @build_commands << lambda { Dir.chdir( pkg_dir ) { sh(*args) } }
+      @build_commands << sh(*args)
     end
 
     def install(*args) 
-      @install_commands << lambda{ Dir.chdir( pkg_dir ) { sh(*args) } } 
+      @install_commands << sh(*args)
     end
 
     def source( url )
@@ -121,13 +126,13 @@ module Assimilate
       log "Building"
       until @build_commands.empty?
         l = @build_commands.shift
-        #l.call
+        l.call
       end
 
       log "Installing into fakeroot"
       until @install_commands.empty?
         l = @install_commands.shift
-        #l.call
+        l.call
       end
       log "Marking installed"
       h = { 'name' => self.name, 'version' => self.version, 'installed_at' => Time.now }
@@ -147,7 +152,7 @@ module Assimilate
         end
         unless satisfied
           log "Installing dependency #{dep['name']}"
-          Recipe.run File.join( recipe_dir, "#{dep['name']}.recipe" )
+          Recipe.run File.join( recipe_dir, dep['name'], "#{dep['name']}.recipe" )
         end
       end
     end
@@ -187,11 +192,20 @@ module Assimilate
     end
 
     def unpack
-      log "unpacking #{local_source}"
+      log "Unpacking"
+      FileUtils.rm_rf( pkg_dir ) if File.directory?( pkg_dir )
+      if local_source.match( /\.tar\.gz\Z/ ) or local_source.match(/\.tgz\Z/) then
+        tgz = Zlib::GzipReader.new( File.open( local_source, 'rb') )
+        Archive::Tar::Minitar.unpack( tgz, build_dir )
+      else
+        raise UnsupportedFormatError, "Unable to extract files from #{File.basename( local_source)} -- unknown format"
+      end
     end
     
     def patch
-      log "patching #{local_source}"
+      log "Patching"
+      Dir[File.join(recipe_dir, "*.patch")].sort.each do |pfile|
+      end
     end
   end
 end

@@ -53,7 +53,7 @@ module Assimilate
 
     def run
       self.instance_eval File.read(@project_file), @project_file, 1
-      Recipe.run File.expand_path( File.join( @recipe_dir, "#{target}.recipe" ) )
+      Recipe.run File.expand_path( File.join( @recipe_dir, target, "#{target}.recipe" ) )
     end
   end
 end

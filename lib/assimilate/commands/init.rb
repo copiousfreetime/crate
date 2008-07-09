@@ -16,9 +16,7 @@ module Assimilate::Commands
 
         recipe_dir = File.join( project_dir, "recipes" )
         FileUtils.mkdir_p( recipe_dir, :verbose => true )
-        Dir.glob( Assimilate.data_path("recipes/*.recipe") ).each do |f|
-          FileUtils.cp( f, recipe_dir, :verbose => true ) unless File.exist?( File.join( recipe_dir, File.basename(f) ) )
-        end
+        FileUtils.cp_r( Assimilate.data_path("recipes"), project_dir, :verbose => true )
         FileUtils.cp( Assimilate.data_path("Assimilate"), project_dir , :verbose => true ) unless File.exist?( File.join( project_dir, "Assimilate" ) )
       end
     end

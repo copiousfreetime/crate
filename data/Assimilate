@@ -3,7 +3,7 @@
 #
 
 # these are the defaults and are relative to the directory this file lives in.
-target     "ruby"
-recipe_dir "recipes"
-build_dir  "build"
-install_dir "fakeroot"
+default_target "ruby"
+recipe_subdir  "recipes"
+build_subdir   "build"
+install_subdir "fakeroot"
