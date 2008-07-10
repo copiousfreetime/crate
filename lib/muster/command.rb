@@ -1,4 +1,4 @@
-module Assimilate
+module Muster
   class Command
     class << self
       def inherited(sub_class)
@@ -29,4 +29,4 @@ module Assimilate
   end
   module Commands; end
 end
-%w[ init build ].each { |c| require "assimilate/commands/#{c}" }
+%w[ init build ].each { |c| require "muster/commands/#{c}" }

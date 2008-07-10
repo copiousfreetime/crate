@@ -3,7 +3,7 @@
 # All rights reserved.  See LICENSE and/or COPYING for details.
 #++
 
-module Assimilate
+module Muster
 
   # The root directory of the project is considered to be the parent directory
   # of the 'lib' directory.
@@ -62,5 +62,5 @@ module Assimilate
   end
 
 end
-require 'assimilate/version'
-require 'assimilate/command_line'
+require 'muster/version'
+require 'muster/command_line'

@@ -1,11 +1,11 @@
 require 'rubygems'
-require 'assimilate/version'
+require 'muster/version'
 require 'tasks/config'
 
-Assimilate::GEM_SPEC = Gem::Specification.new do |spec|
+Muster::GEM_SPEC = Gem::Specification.new do |spec|
   proj = Configuration.for('project')
   spec.name         = proj.name
-  spec.version      = Assimilate::VERSION
+  spec.version      = Muster::VERSION
   
   spec.author       = proj.author
   spec.email        = proj.email
@@ -25,6 +25,7 @@ Assimilate::GEM_SPEC = Gem::Specification.new do |spec|
   spec.add_dependency("main")
   spec.add_dependency("progressbar")
   spec.add_dependency("archive-tar-minitar")
+  spec.add_dependency("amalgalite")
   
    
   

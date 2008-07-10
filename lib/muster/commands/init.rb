@@ -1,5 +1,5 @@
-module Assimilate::Commands
-  class Init < ::Assimilate::Command
+module Muster::Commands
+  class Init < ::Muster::Command
 
     attr_reader :directory
     attr_reader :project
@@ -16,8 +16,8 @@ module Assimilate::Commands
 
         recipe_dir = File.join( project_dir, "recipes" )
         FileUtils.mkdir_p( recipe_dir, :verbose => true )
-        FileUtils.cp_r( Assimilate.data_path("recipes"), project_dir, :verbose => true )
-        FileUtils.cp( Assimilate.data_path("Assimilate"), project_dir , :verbose => true ) unless File.exist?( File.join( project_dir, "Assimilate" ) )
+        FileUtils.cp_r( Muster.data_path("recipes"), project_dir, :verbose => true )
+        FileUtils.cp( Muster.data_path("Muster"), project_dir , :verbose => true ) unless File.exist?( File.join( project_dir, "Muster" ) )
       end
     end
   end

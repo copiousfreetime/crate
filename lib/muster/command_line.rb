@@ -1,30 +1,30 @@
 require 'main'
-require 'assimilate/command'
-module Assimilate
+require 'muster/command'
+module Muster
   ##
   # ::Main.create creates a class that does command line parsing
   #
   CommandLine = ::Main.create {
     author "Copyright (c) 2008 Jeremy Hinegardner"
-    version ::Assimilate::Version.to_s
+    version ::Muster::Version.to_s
 
     description <<-txt
-    The Assimilate command line tool for generating custom static ruby builds.
+    The Muster command line tool for generating custom static ruby builds.
 
-    run 'assimilate help modename' for more info
+    run 'muster help modename' for more info
     txt
 
     examples <<-txt
-      . assimilate init project
-      . assimilate build
+      . muster init project
+      . muster build
     txt
 
     run { help! }
 
-    ## initialize a new assimilate project
+    ## initialize a new muster project
     mode( "init" ) {
       description <<-txt
-      Create a new assimilate based project.
+      Create a new muster based project.
       txt
 
       argument( :project ) { 
@@ -39,23 +39,23 @@ module Assimilate
         validate { |d| File.directory?( d ) }
       }
 
-      run { Assimilate::Commands::Init.new( CommandLine.params_to_options( params ) ).run }
+      run { Muster::Commands::Init.new( CommandLine.params_to_options( params ) ).run }
     }
 
     ## build the project
     mode( "build" ) {
       description <<-txt
-      Build the assimilate project.
+      Build the muster project.
       txt
 
       option( :directory ) {
         argument :required
-        description "A directory with an 'Assimilate' file in int"
+        description "A directory with an 'Muster' file in int"
         default Dir.pwd
-        validate { |d| File.exist?( File.join( d, "Assimilate") ) }
+        validate { |d| File.exist?( File.join( d, "Muster") ) }
       }
 
-      run { Assimilate::Commands::Build.new( CommandLine.params_to_options( params ) ).run }
+      run { Muster::Commands::Build.new( CommandLine.params_to_options( params ) ).run }
     }
   }
 

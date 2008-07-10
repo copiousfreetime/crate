@@ -24,13 +24,13 @@ require 'rake/clean'
 # Main configuration for the project, these overwrite the items that are in
 # tasks/config.rb
 #-------------------------------------------------------------------------------
-require 'assimilate'
+require 'muster'
 Configuration.for("project") {
-  name      "assimilate"
-  version   Assimilate::VERSION
+  name      "muster"
+  version   Muster::VERSION
   author    "Jeremy Hinegardner"
   email     "jeremy@copiousfreetime.org"
-  homepage  "http://assimilate.rubyforge.org/"
+  homepage  "http://copiousfreetime.rubyforge.org/muster/"
 }
 
 #-------------------------------------------------------------------------------

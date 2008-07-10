@@ -1,6 +1,6 @@
-require 'assimilate/recipe'
+require 'muster/recipe'
 require 'yaml'
-module Assimilate
+module Muster
   class Project
     class << self
       def run( file )
@@ -20,7 +20,7 @@ module Assimilate
       @recipe_dir = File.join( self.project_root, "recipes" )
       @build_dir  = File.join( self.project_root, "build" )
       @install_dir = File.join( self.project_root, "fakeroot" )
-      ::Assimilate.project = self
+      ::Muster.project = self
     end
 
     def installed_recipes

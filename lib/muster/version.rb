@@ -3,7 +3,7 @@
 # All rights reserved.  See LICENSE and/or COPYING for details
 #++
 
-module Assimilate
+module Muster
   module Version
     MAJOR   = 0
     MINOR   = 0

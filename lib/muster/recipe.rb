@@ -9,7 +9,7 @@ require 'progressbar'
 require 'archive/tar/minitar'
 require 'zlib'
 
-module Assimilate
+module Muster
   class Recipe
     class ChecksumError < ::StandardError; end
     def self.run(file)
@@ -35,7 +35,7 @@ module Assimilate
 
     def run( file )
       @file = File.expand_path(file)
-      @build_dir = File.join(Assimilate.project.build_dir, File.basename( file, ".recipe" ))
+      @build_dir = File.join(Muster.project.build_dir, File.basename( file, ".recipe" ))
       FileUtils.mkdir_p self.build_dir, :verbose => true
       Dir.chdir( self.build_dir ) do
         self.instance_eval File.read(file), file, 1
@@ -55,7 +55,7 @@ module Assimilate
     end
 
     def install_dir
-      Assimilate.project.install_dir
+      Muster.project.install_dir
     end
 
     def sh(*args)
@@ -146,7 +146,7 @@ module Assimilate
 
 
     def satisfy_dependencies
-      installed = Assimilate.project.installed_recipes
+      installed = Muster.project.installed_recipes
       @dependencies.each do |dep|
         satisfied = false
         installed.each do |recipe|
@@ -157,7 +157,7 @@ module Assimilate
         end
         unless satisfied
           log "Installing dependency #{dep['name']}"
-          Recipe.run File.join( Assimilate.project.recipe_dir, dep['name'], "#{dep['name']}.recipe" )
+          Recipe.run File.join( Muster.project.recipe_dir, dep['name'], "#{dep['name']}.recipe" )
         end
       end
     end

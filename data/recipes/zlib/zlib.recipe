@@ -1,5 +1,5 @@
 #
-# Assimilate recipe for zlib version 1.2.3
+# Muster recipe for zlib version 1.2.3
 #
 package "zlib", "1.2.3"
 source  "http://www.zlib.net/zlib-1.2.3.tar.gz"

@@ -1,5 +1,5 @@
 #
-# Assimilate recipe for openssl
+# Muster recipe for openssl
 #
 package "openssl", "0.9.8h"
 source "http://www.openssl.org/source/openssl-0.9.8h.tar.gz"
