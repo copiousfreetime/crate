@@ -4,3 +4,27 @@
  * generate a bootstrap piece of C code to overload the ruby main and launch
    into the basic code, running through the bootstrap table and evalling each
    piece of code as it goes through the system.
+
+ * muster overwrites argc, argv in main, with only the options "-e 'Muster::boot'"
+
+ * muster has a very small C-extension that deals with amalgalite, does low
+   level calls to the appropriate table and does the boot loader.
+
+ * as part of the build need to kill all the $: and such variables with there
+   initial values, $" should be empty and so should $:
+
+ * kill all other command line parsing
+ * force all commandline options to be pushed to the script, push a '--' infront
+   of the commands ?
+
+ * set RUBYOPT in main and all the other RUBY ENV vars
+
+ * rename output executable to 'something from Muster' file
+
+ * Muster::boot() -- opens up an sqlitedatabase using the low level amalgalite
+                     methods or sqlite directly.  Selects from a configured 
+                     table 'default "muster"'  Interates over all the rows
+                     evals each of the 'contents' 
+
+  id, filename, contents
+
