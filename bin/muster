@@ -4,13 +4,8 @@
 # All rights reserved.  See LICENSE and/or COPYING for details.
 #++
 #
-require 'rubygems'
-begin 
-  require 'assimilate'
-rescue LoadError
-  $: << File.expand_path(File.join(File.dirname(__FILE__), "..", "lib"))
-  require 'assimilate'
-end
+
+require 'muster'
 %w[ INT TERM QUIT ].each do |s| 
   trap( s ) do 
     $stderr.puts "Received Signal #{s}, Dieing."
@@ -18,4 +13,4 @@ end
   end
 end
 
-Assimilate::CommandLine.new.run(ARGV, ENV)
+Muster::CommandLine.new.run(ARGV, ENV)
