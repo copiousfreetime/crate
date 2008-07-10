@@ -1,0 +1,49 @@
+Selective pick some extensions and make sure they are all statically compiled
+--- ext/Setup.orig
++++ ext/Setup
+@@ -1,7 +1,7 @@
+-#option nodynamic
++option nodynamic
+ 
+ #Win32API
+-#bigdecimal
++bigdecimal
+ #curses
+ #dbm
+ #digest
+@@ -11,24 +11,24 @@
+ #digest/sha2
+ #dl
+ #enumerator
+-#etc
+-#fcntl
++etc
++fcntl
+ #gdbm
+ #iconv
+-#io/wait
++io/wait
+ #nkf
+ #pty
+-#openssl
++openssl
+ #racc/cparse
+ #readline
+ #sdbm
+-#socket
+-#stringio
+-#strscan
+-#syck
+-#syslog
++socket
++stringio
++strscan
++syck
++syslog
+ #tcltklib
+-#thread
++thread
+ #tk
+ #win32ole
+-#zlib
++zlib

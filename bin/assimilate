@@ -11,5 +11,11 @@ rescue LoadError
   $: << File.expand_path(File.join(File.dirname(__FILE__), "..", "lib"))
   require 'assimilate'
 end
+%w[ INT TERM QUIT ].each do |s| 
+  trap( s ) do 
+    $stderr.puts "Received Signal #{s}, Dieing."
+    exit 3
+  end
+end
 
 Assimilate::CommandLine.new.run(ARGV, ENV)

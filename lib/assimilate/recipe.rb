@@ -51,7 +51,7 @@ module Assimilate
 
 
     def recipe_dir
-      Assimilate.project.recipe_dir
+      File.dirname( file )
     end
 
     def install_dir
@@ -123,6 +123,11 @@ module Assimilate
       download_and_verify
       unpack
       patch
+
+      if self.respond_to?( :before_build) then
+        self.before_build
+      end
+
       log "Building"
       until @build_commands.empty?
         l = @build_commands.shift
@@ -152,7 +157,7 @@ module Assimilate
         end
         unless satisfied
           log "Installing dependency #{dep['name']}"
-          Recipe.run File.join( recipe_dir, dep['name'], "#{dep['name']}.recipe" )
+          Recipe.run File.join( Assimilate.project.recipe_dir, dep['name'], "#{dep['name']}.recipe" )
         end
       end
     end
@@ -165,11 +170,16 @@ module Assimilate
       progress_bar = nil
       pbar = nil 
       File.open( local_source , "w" ) do |outf|
-        uri.open( :content_length_proc => lambda { |t| pbar = ::ProgressBar.new( File.basename( local_source ), t ) if  t && 0 < t  },  
-                  :progress_proc       => lambda { |s| pbar.set s if pbar } ) do |inf|
-          outf.write inf.read
-        end 
-        puts
+        begin
+          uri.open( :content_length_proc => lambda { |t| pbar = ::ProgressBar.new( File.basename( local_source ), t ) if  t && 0 < t  },  
+                    :progress_proc       => lambda { |s| pbar.set s if pbar } ) do |inf|
+            outf.write inf.read
+          end 
+        rescue => e
+          puts
+          STDERR.puts "Error downloading #{uri.to_s} : #{e}"
+          exit 1
+        end
       end
 
       verify!
@@ -203,8 +213,13 @@ module Assimilate
     end
     
     def patch
-      log "Patching"
+      log "Patching #{recipe_dir}"
+
       Dir[File.join(recipe_dir, "*.patch")].sort.each do |pfile|
+        Dir.chdir( pkg_dir ) do 
+          log "applying #{File.basename( pfile ) }"
+          %x[ patch -p0 < #{pfile} ]
+        end  
       end
     end
   end
