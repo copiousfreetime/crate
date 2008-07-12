@@ -68,7 +68,7 @@ module Muster
         end
       rescue ::OptionParser::ParseError => pe
         puts "#{opts.program_name}: #{pe}"
-        ptus "Try `#{opts.program_name} --help` for more information"
+        puts "Try `#{opts.program_name} --help` for more information"
         exit 1
       end
     end
@@ -93,7 +93,7 @@ module Muster
     # and display a message on the screen indicating that the directory is being
     # created
     def mkdir( dir )
-      dir = dir.empty? ? site : ::File.join( project, dir )
+      dir = dir.empty? ? project : ::File.join( project, dir )
       unless File.directory?( dir )
         creating dir
         FileUtils.mkdir_p dir
@@ -120,8 +120,8 @@ module Muster
     # Iterate over all the feils in the Muster project template directory and
     # store them in a hash
     def project_files
-      keep       = %r/.recipe$|^Rakefile$/
-      strip_path = %r/\A#{data}\/?/o
+      keep       = %r/.rake$|Rakefile$/
+      strip_path = %r/\A#{data}?/o
       paths      = Hash.new { |h,k| h[k] = [] }
       Find.find( data ) do |path|
         next unless keep =~ path
