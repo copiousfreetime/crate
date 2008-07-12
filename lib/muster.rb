@@ -3,6 +3,18 @@
 # All rights reserved.  See LICENSE and/or COPYING for details.
 #++
 
+require 'rubygems'
+require 'logging'
+require 'date'
+
+# Configure Muster to log to STDOUT at the 'info' level
+Logging::Logger['Muster'].level = :info
+Logging::Logger['Muster'].add_appenders( Logging::Appender.stdout )
+Logging::Appender.stdout.layout = Logging::Layouts::Pattern.new( 
+    :pattern      => "[%d] %5l: %m\n",   # [date] LEVEL: message
+    :date_pattern => "%H:%M:%S"          # date == HH::MM::SS
+)
+
 module Muster
 
   # The root directory of the project is considered to be the parent directory
@@ -63,4 +75,4 @@ module Muster
 
 end
 require 'muster/version'
-require 'muster/command_line'
+require 'muster/main'

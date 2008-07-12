@@ -1,9 +1,0 @@
-#
-# This is Muster control file
-#
-
-# these are the defaults and are relative to the directory this file lives in.
-default_target "ruby"
-recipe_subdir  "recipes"
-build_subdir   "build"
-install_subdir "fakeroot"

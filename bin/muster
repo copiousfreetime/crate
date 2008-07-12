@@ -1,16 +1,9 @@
 #!/usr/bin/env ruby
-#--
-# Copyright (c) 2008 Jeremy Hinegardner
-# All rights reserved.  See LICENSE and/or COPYING for details.
-#++
-#
 
-require 'muster'
-%w[ INT TERM QUIT ].each do |s| 
-  trap( s ) do 
-    $stderr.puts "Received Signal #{s}, Dieing."
-    exit 3
-  end
+begin
+  require 'muster'
+rescue LoadError
+  $: << File.expand_path( File.join( File.dirname( __FILE__ ), %w[ .. lib ] ) ) 
+  require 'muster'
 end
-
-Muster::CommandLine.new.run(ARGV, ENV)
+::Muster::Main.run( ARGV )

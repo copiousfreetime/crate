@@ -1,7 +1,32 @@
-require 'muster/recipe'
-require 'yaml'
+require 'rake'
+
 module Muster
-  class Project
+  class ProjectTask < ::Rake::TaskLib
+    # Top level directory of the project. 
+    attr_reader :project_root
+
+    # subdirectory of +project_root+ in which the recipe's are stored.
+    # default: 'recipes'
+    attr_accessor :recipe_dir
+
+    # subdirectory of +project_root+ where recipes' are built. default: 'build'
+    attr_accessor :build_dir
+
+    # subdirectory of +project_root+ representing a fake installation root.
+    # default 'fakeroot'
+    attr_accessor :install_dir
+
+    def initialize( name ) 
+      @name        = name
+      @project_dir = File.expand_path( File.dirname( Rake.application.rakefile )
+      @recipe_dir  = 'recipe'
+      @build_dir   = 'build'
+      @install_dir = 'fakeroot'
+      yield self if block_given?
+    end
+  end
+end
+__END__
     class << self
       def run( file )
         Project.new( file ).run
