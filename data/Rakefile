@@ -1,6 +1,8 @@
 #
 # Top level Rakefile for building a custom ruby 
 #
-require 'muster/project_task'
+$: << "/Users/jeremy/Projects/muster/lib"
+require 'muster'
+
 Muster::ProjectTask.new( "myruby" ) 
 
