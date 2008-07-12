@@ -1,3 +1,5 @@
+require 'muster'
+
 require 'rubygems'
 require 'optparse'
 require 'find'

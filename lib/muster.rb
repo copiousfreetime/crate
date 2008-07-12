@@ -74,5 +74,5 @@ module Muster
   end
 
 end
-require 'muster/version'
-require 'muster/main'
+%w[ version project_task task ].each { |r| require "muster/#{r}" }
+

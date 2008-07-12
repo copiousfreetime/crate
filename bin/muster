@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
 begin
-  require 'muster'
+  require 'muster/main'
 rescue LoadError
   $: << File.expand_path( File.join( File.dirname( __FILE__ ), %w[ .. lib ] ) ) 
-  require 'muster'
+  require 'muster/main'
 end
 ::Muster::Main.run( ARGV )

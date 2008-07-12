@@ -1,5 +1,9 @@
 require 'rake'
 require 'rake/tasklib'
+require 'open-uri'
+require 'progressbar'
+require 'zlib'
+require 'archive/tar/minitar'
 
 module Muster
   # Create a build task that will download, checksum and build and install an
@@ -95,7 +99,7 @@ module Muster
       namespace name do
 
         file local_source do
-          download( upstream_source )
+          download
         end
 
         desc "Download #{File.basename( local_source )}"
@@ -108,22 +112,54 @@ module Muster
 
         desc "Unpack #{name} into #{build_dir}"
         task :unpack => :verify do
+          unpack
         end
 
         desc "patch #{name}"
         task :patch => :unpack do
         end
 
+        file built_dotfile => :patch do
+          Dir.chdir( pkg_dir ) do
+            build
+          end
+          h = { 'name' => self.name, 'version' => self.version, 'built_at' => Time.now }
+          File.open( built_dotfile, "w") { |f| f.puts h.to_yaml }
+        end
+
 
         desc "Build #{name} #{version}"
-        task :build => :patch do
-          build
+        task :build => built_dotfile
+
+        file installed_dotfile => :build do 
+          Dir.chdir( pkg_dir ) do
+            install
+          end
+          h = { 'name' => self.name, 'version' => self.version, 'installed_at' => Time.now }
+          File.open( installed_dotfile, "w") { |f| f.puts h.to_yaml }
         end
 
-        desc "Install #{name} into #{Muster.fakeroot}"
-        task :install => :build do
+        desc "Install #{name} into #{Muster.project.install_dir}"
+        task :install => installed_dotfile do
         end
 
+      end
+    end
+
+    def built_dotfile
+      File.join( build_dir, ".built" )
+    end
+
+    def installed_dotfile
+      File.join( build_dir, ".installed" )
+    end
+
+    #
+    # allow this task to say it depends on something else
+    #
+    def depends_on( other_task )
+      namespace name do
+        task :install => "#{other_task}:install"
       end
     end
 
@@ -133,6 +169,7 @@ module Muster
     def download
       progress_bar = nil
       pbar = nil 
+      FileUtils.mkdir_p File.dirname( local_source ) 
       File.open( local_source , "w" ) do |outf|
         begin
           upstream_source.open( :content_length_proc => lambda { |t| pbar = ::ProgressBar.new( File.basename( local_source ), t ) if  t && 0 < t  },  
@@ -141,7 +178,7 @@ module Muster
           end 
         rescue => e
           puts
-          STDERR.puts "Error downloading #{uri.to_s} : #{e}"
+          STDERR.puts "Error downloading #{upstream_source.to_s} : #{e}"
           exit 1
         end
       end
@@ -168,8 +205,8 @@ module Muster
     def unpack
       FileUtils.rm_rf( pkg_dir ) if File.directory?( pkg_dir )
       if local_source.match( /\.tar\.gz\Z/ ) or local_source.match(/\.tgz\Z/) then
-        tgz = Zlib::GzipReader.new( File.open( local_source, 'rb') )
-        Archive::Tar::Minitar.unpack( tgz, build_dir )
+        tgz = ::Zlib::GzipReader.new( File.open( local_source, 'rb') )
+        ::Archive::Tar::Minitar.unpack( tgz, build_dir )
       else
         raise UnsupportedFormatError, "Unable to extract files from #{File.basename( local_source)} -- unknown format"
       end

@@ -1,7 +1,11 @@
 require 'rake'
+require 'rake/tasklib'
 
 module Muster
   class ProjectTask < ::Rake::TaskLib
+    # Name of the project
+    attr_reader :name
+
     # Top level directory of the project. 
     attr_reader :project_root
 
@@ -17,36 +21,50 @@ module Muster
     attr_accessor :install_dir
 
     def initialize( name ) 
-      @name        = name
-      @project_dir = File.expand_path( File.dirname( Rake.application.rakefile )
-      @recipe_dir  = 'recipe'
-      @build_dir   = 'build'
-      @install_dir = 'fakeroot'
+      raise "Muster Project already initialized" if ::Muster.project
+      @name         = name
+      @project_root = File.expand_path( File.dirname( Rake.application.rakefile ) )
+      @recipe_dir   = File.join( @project_root, 'recipes' )
+      @build_dir    = File.join( @project_root, 'build' )
+      @install_dir  = File.join( @project_root, 'fakeroot' )
       yield self if block_given?
+      ::Muster.project = self
+      define
+    end
+
+    def recipe_dir=( rd )
+      @recipe_dir = File.join( project_root, rd )
+    end
+
+    def build_dir=( bd )
+      @build_dir = File.join( project_root, bd)
+    end
+
+    def install_dir=( id )
+      @install_dir = File.join( project_root, id )
+    end
+
+    #
+    # define the project task
+    #
+    def define
+      desc "Build #{name}"
+      task :build
+
+      load_recipes
+    end
+
+    #
+    # Load all .rake files that are in a recipe sub directory
+    #
+    def load_recipes
+      Dir["#{recipe_dir}/*/*.rake"].each do |recipe|
+        load recipe
+      end
     end
   end
 end
 __END__
-    class << self
-      def run( file )
-        Project.new( file ).run
-      end
-    end
-
-    attr_reader :project_root
-    attr_reader :target
-    attr_reader :recipe_dir
-    attr_reader :build_dir
-    attr_reader :install_dir
-
-    def initialize( file )
-      @project_file = File.expand_path( file )
-      @project_root = File.dirname( @project_file )
-      @recipe_dir = File.join( self.project_root, "recipes" )
-      @build_dir  = File.join( self.project_root, "build" )
-      @install_dir = File.join( self.project_root, "fakeroot" )
-      ::Muster.project = self
-    end
 
     def installed_recipes
       installed = []

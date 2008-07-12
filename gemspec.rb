@@ -22,7 +22,6 @@ Muster::GEM_SPEC = Gem::Specification.new do |spec|
   # add dependencies here
   # spec.add_dependency("rake", ">= 0.8.1")
   spec.add_dependency("configuration", ">= 0.0.5")
-  spec.add_dependency("main")
   spec.add_dependency("progressbar")
   spec.add_dependency("archive-tar-minitar")
   spec.add_dependency("amalgalite")
