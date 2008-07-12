@@ -4,5 +4,5 @@
 $: << "/Users/jeremy/Projects/muster/lib"
 require 'muster'
 
-Muster::ProjectTask.new( "myruby" ) 
+Muster::Project.new( "myruby" ) 
 

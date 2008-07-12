@@ -1,4 +1,7 @@
-Muster::Task.new( "ruby" "1.8.6-p114") do |t|
+#
+# Muster recipe for ruby version 1.2.3
+#
+Muster::Dependency.new( "ruby", "1.8.6-p114") do |t|
   t.depends_on( "openssl" )
   t.depends_on( "zlib" )
 

@@ -91,9 +91,11 @@ module Muster
       end
     end
 
+    #
     # Make a directory in the specified directory under the project directory
     # and display a message on the screen indicating that the directory is being
-    # created
+    # created.
+    #
     def mkdir( dir )
       dir = dir.empty? ? project : ::File.join( project, dir )
       unless File.directory?( dir )
@@ -102,8 +104,10 @@ module Muster
       end
     end
 
-    # Copy a file from the Muster master location to the project location.
+    #
+    # Copy a file from the Muster prototype location to the project location.
     # Display a message that the file is being created.
+    #
     def cp( file )
       src = ::File.join( data, file )
       dest = ::File.join( project, file )
@@ -111,16 +115,25 @@ module Muster
       FileUtils.cp( src, dest )
     end
 
+    #
+    # log a creating message
+    #
     def creating( msg )
       @log.info "creating #{msg}"
     end
+
+    #
+    # log a fatal message and abort
+    #
     def abort( msg )
       @log.fatal msg
       exit 1
     end
 
+    #
     # Iterate over all the feils in the Muster project template directory and
     # store them in a hash
+    #
     def project_files
       keep       = %r/.rake$|Rakefile$/
       strip_path = %r/\A#{data}?/o

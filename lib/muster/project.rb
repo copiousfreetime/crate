@@ -2,7 +2,12 @@ require 'rake'
 require 'rake/tasklib'
 
 module Muster
-  class ProjectTask < ::Rake::TaskLib
+  #
+  # the Muster top level task, there should only be one of these in existence at
+  # a time.  This task is accessible via Muster.project, and is what is defined
+  # in the Rakefile in the project directory.
+  #
+  class Project < ::Rake::TaskLib
     # Name of the project
     attr_reader :name
 
@@ -45,58 +50,44 @@ module Muster
     end
 
     #
+    # Create a logger for the project
+    #
+    def logger
+      unless @logger 
+        @logger = Logging::Logger[name]
+        @logger.level = :debug
+        @logger.add_appenders
+
+        @logger.add_appenders( 
+            Logging::Appenders::File.new( File.join( project_root, "project.log" ), :layout => Logging::Layouts::Pattern.new( :pattern => "%d %5l: %m\n" )),
+            Logging::Appenders::Stdout.new( 'stdout', :level => :info,
+                                          :layout => Logging::Layouts::Pattern.new( :pattern      => "%d %5l: %m\n",
+                                                                                    :date_pattern => "%H:%M:%S") )
+        )
+      end
+      return @logger
+    end
+
+    #
     # define the project task
     #
     def define
       desc "Build #{name}"
-      task :build
+      task :build do 
+        logger "Build #{name}"
+      end
 
-      load_recipes
+      load_rakefiles
     end
 
     #
     # Load all .rake files that are in a recipe sub directory
     #
-    def load_recipes
+    def load_rakefiles
       Dir["#{recipe_dir}/*/*.rake"].each do |recipe|
+        logger.debug "loading #{recipe}"
         load recipe
       end
-    end
-  end
-end
-__END__
-
-    def installed_recipes
-      installed = []
-      Dir.entries( build_dir ).each do |d|
-        next if d.index(".") == 0
-        installed_file = File.join( build_dir, d, ".installed" )
-        if File.exist?( installed_file ) then
-          installed << YAML::load_file( installed_file ) 
-        end
-      end
-      return installed
-    end
-
-    def default_target( arg )
-      @target = arg
-    end
-
-    def recipe_subdir( arg )
-      @recipe_dir = File.expand_path( File.join( self.project_root, arg ) )
-    end
-
-    def build_subdir( arg )
-      @build_dir = File.expand_path( File.join( self.project_root, arg ) )
-    end
-
-    def install_subdir( arg )
-      @install_dir = File.expand_path( File.join( self.project_root, arg ) )
-    end
-
-    def run
-      self.instance_eval File.read(@project_file), @project_file, 1
-      Recipe.run File.expand_path( File.join( @recipe_dir, target, "#{target}.recipe" ) )
     end
   end
 end
