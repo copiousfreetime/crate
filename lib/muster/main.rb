@@ -79,7 +79,7 @@ module Muster
     # Create a new Muster project
     #
     def create_project
-      #abort "'#{project}' already exists" if File.exist?( project )
+      abort "'#{project}' already exists" if File.exist?( project )
 
       # copy over files from the master project data diretory in muster
       files = project_files
