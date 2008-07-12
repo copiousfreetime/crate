@@ -79,7 +79,7 @@ module Muster
     # Create a new Muster project
     #
     def create_project
-      abort "'#{project}' already exists" if File.exist?( project )
+      #abort "'#{project}' already exists" if File.exist?( project )
 
       # copy over files from the master project data diretory in muster
       files = project_files
@@ -135,7 +135,7 @@ module Muster
     # store them in a hash
     #
     def project_files
-      keep       = %r/.rake$|Rakefile$/
+      keep       = %r/.rake$|Rakefile$|.patch$/
       strip_path = %r/\A#{data}?/o
       paths      = Hash.new { |h,k| h[k] = [] }
       Find.find( data ) do |path|

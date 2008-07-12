@@ -21,13 +21,20 @@ module Muster
     # Upstream location 
     attr_accessor :upstream_source
 
+    # array of shell commands for building 
+    attr_accessor :build_commands
+
+    # array of shell commands for installing
+    attr_accessor :install_commands
+
     #
     # Create a Muster Dependency with the given name and version
     #
     def initialize( name = nil, version = nil )
       @name = name
       @version = version
-      logger.debug "Instantiating Dependency for #{name} #{version}"
+      @install_commands = []
+      @build_commands = []
       yield self if block_given?
       @upstream_source = URI.parse( @upstream_source )
       define unless name.nil? or version.nil?
@@ -109,8 +116,6 @@ module Muster
     #
     def define
       logger.debug "Defining tasks for #{name} #{version}"
-      desc "Build and Install #{name} #{version}"
-      task name => "#{name}:default"
 
       namespace name do
 
@@ -180,8 +185,48 @@ module Muster
           dotfile!( 'install' )
         end
 
-        task :done    => :install
-        task :default => :done
+        task :done    => "#{name}:install"
+        task :default => "#{name}:done"
+      end
+      
+      desc "Build and Install #{name} #{version}"
+      task name => "#{name}:default"
+    end
+
+    #
+    # Execute all the build commands
+    #
+    def build
+      cd_and_sh( pkg_dir, build_commands )
+    end
+
+    #
+    # Execute all the install commands
+    #
+    def install
+      cd_and_sh( pkg_dir, install_commands )
+    end
+
+    #
+    # Change to a directory and execute a sequence of commands
+    #
+    def cd_and_sh( dir, cmds )
+      Dir.chdir( dir ) do
+        cmds.each do |cmd|
+          sh cmd
+        end
+      end
+    end
+
+    #
+    # Execute a shell command, sending the command name to the logger at info
+    # level and all the output to the logger at the debug level
+    #
+    def sh( cmd )
+      logger.info( cmd )
+      io = IO.popen( cmd )
+      until io.eof? 
+        logger.debug( io.readline.strip )
       end
     end
 

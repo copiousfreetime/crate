@@ -17,12 +17,10 @@ Muster::Dependency.new( "ruby", "1.8.6-p114") do |t|
     %w[ libz.a libcrypto.a libssl.a ].each do |f| 
       FileUtils.cp File.join( install_dir, "usr", "lib", f ), pkg_dir, :verbose => true
     end 
-    system "./configure --disable-shared --prefix=#{File.join( '/', 'usr' )}"
-    system "make"
-
+    sh "./configure --disable-shared --prefix=#{File.join( '/', 'usr' )}"
+    sh "make"
   end
 
-  def t.install
-    system "make install DESTDIR=#{install_dir}"
-  end
+  t.install_commands << "make install DESTDIR=#{t.install_dir}"
+
 end

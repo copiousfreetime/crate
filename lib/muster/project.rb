@@ -74,7 +74,7 @@ module Muster
     def define
       desc "Build #{name}"
       task :build do 
-        logger "Build #{name}"
+        logger.info "Build #{name}"
       end
 
       load_rakefiles
