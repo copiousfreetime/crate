@@ -74,5 +74,5 @@ module Muster
   end
 
 end
-%w[ version utils dependency project ].each { |r| require "muster/#{r}" }
+%w[ version utils dependency gem_integration ruby project ].each { |r| require "muster/#{r}" }
 

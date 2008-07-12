@@ -1,9 +1,11 @@
 #
 # Muster recipe for ruby version 1.2.3
 #
-Muster::Dependency.new( "ruby", "1.8.6-p114") do |t|
+Muster::Ruby.new( "ruby", "1.8.6-p114") do |t|
   t.depends_on( "openssl" )
   t.depends_on( "zlib" )
+
+  t.integrates( "amalgalite" )
 
   t.upstream_source  = "ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.6-p114.tar.gz"
   t.upstream_md5     = "500a9f11613d6c8ab6dcf12bec1b3ed3"

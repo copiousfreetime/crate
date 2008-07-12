@@ -3,6 +3,7 @@ require 'zlib'
 require 'open-uri'
 require 'fileutils'
 require 'progressbar'
+require 'rubygems/installer'
 
 module Muster
   #
@@ -15,7 +16,10 @@ module Muster
       Dir.chdir( into ) do 
         if archive.match( /\.tar\.gz\Z/ ) or archive.match(/\.tgz\Z/) then
           tgz = ::Zlib::GzipReader.new( File.open( local_source, 'rb') )
-          ::Archive::Tar::Minitar.unpack( tgz, build_dir )
+          ::Archive::Tar::Minitar.unpack( tgz, into )
+        elsif archive.match( /\.gem\Z/ ) then
+          subdir = File.basename( archive, ".gem" )
+          Gem::Installer.new( archive ).unpack( subdir )
         else
           raise "Unable to extract files from #{File.basename( local_source)} -- unknown format"
         end

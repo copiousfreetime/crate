@@ -111,87 +111,104 @@ module Muster
     #
     # The dependency chain is:
     #
-    #   :install => :build => :integrate => :patch => :unpack => :verify => :download
+    #   :install => :build => :patch => :unpack => :verify => :download
     #
     #
     def define
       logger.debug "Defining tasks for #{name} #{version}"
 
       namespace name do
-
-        file local_source do |t|
-          logger.info "Downloading #{upstream_source} to #{t.name}"
-          download( upstream_source, t.name )
-        end
-
-        desc "Download #{File.basename( local_source )}"
-        task :download => local_source
-
-        desc "Verify source against checksum #{@digest.hex}"
-        task :verify => "#{name}:download" do 
-          if @digest.valid?( local_source ) then
-            logger.info "#{local_source} validates against #{@digest.hex}"
-          else
-            raise "#{local_source} does not have checksum #{@digest.hex}" 
-          end
-        end
-
-        #-- unpack
-        desc "Unpack #{name} into #{build_dir}"
-        task :unpack => "#{name}:verify" do 
-          logger.info "Unpacking"
-          unpack( local_source, build_dir )
-        end
-
-        #-- patch
-        desc "Apply patches to #{name}"
-        task :patch => dotfile( 'patch' )  do
-          logger.info "#{name} #{version} is patched"
-        end
-        file dotfile( 'patch' ) => "#{name}:unpack" do
-          logger.info "Patching #{name} #{version}"
-          patch_files.each do |pfile|
-            logger.info "applying patch #{File.basename( pfile ) }"
-            apply_patch( pfile, pkg_dir )
-          end
-          dotfile!( 'patch' )
-        end
-
-        #-- build
-        desc "Build #{name} #{version}"
-        task :build => dotfile( 'build' ) do
-          logger.info "#{name} #{version} built"
-        end
-
-        file dotfile( 'build' ) => dotfile( 'patch' ) do
-          logger.info "Bulding #{name} #{version}"
-          Dir.chdir( pkg_dir ) do
-            build
-          end
-          dotfile!( 'build' )
-        end
-
-        #-- install
-        desc "Install #{name} into #{Muster.project.install_dir}"
-        task :install => dotfile('install')  do
-          logger.info "#{name} #{version} is installed"
-        end
-
-        file dotfile( 'install' ) => "#{name}:build" do 
-          logger.info "Installing #{name} #{version}"
-          Dir.chdir( pkg_dir ) do
-            install
-          end
-          dotfile!( 'install' )
-        end
+        define_download
+        define_verify
+        define_unpack
+        define_patch
+        define_build
+        define_install
 
         task :done    => "#{name}:install"
         task :default => "#{name}:done"
       end
-      
+
       desc "Build and Install #{name} #{version}"
       task name => "#{name}:default"
     end
+
+    def define_download
+      file local_source do |t|
+        logger.info "Downloading #{upstream_source} to #{t.name}"
+        download( upstream_source, t.name )
+      end
+
+      desc "Download #{File.basename( local_source )}"
+      task :download => local_source
+    end
+
+    def define_verify
+      desc "Verify source against checksum #{@digest.hex}"
+      task :verify => "#{name}:download" do 
+        if @digest.valid?( local_source ) then
+          logger.info "#{local_source} validates against #{@digest.hex}"
+        else
+          raise "#{local_source} does not have checksum #{@digest.hex}" 
+        end
+      end
+    end
+
+    def define_unpack
+      #-- unpack
+      desc "Unpack #{name} into #{build_dir}"
+      task :unpack => "#{name}:verify" do 
+        logger.info "Unpacking"
+        unpack( local_source, build_dir )
+      end
+    end
+
+    def define_patch
+      desc "Apply patches to #{name}"
+      task :patch => dotfile( 'patch' )  do
+        logger.info "#{name} #{version} is patched"
+      end
+      file dotfile( 'patch' ) => "#{name}:unpack" do
+        logger.info "Patching #{name} #{version}"
+        patch_files.each do |pfile|
+          logger.info "applying patch #{File.basename( pfile ) }"
+          apply_patch( pfile, pkg_dir )
+        end
+        dotfile!( 'patch' )
+      end
+    end
+
+    def define_build
+      desc "Build #{name} #{version}"
+      task :build => dotfile( 'build' ) do
+        logger.info "#{name} #{version} built"
+      end
+
+      file dotfile( 'build' ) => dotfile( 'patch' ) do
+        logger.info "Bulding #{name} #{version}"
+        Dir.chdir( pkg_dir ) do
+          build
+        end
+        dotfile!( 'build' )
+      end
+    end
+
+    def define_install
+      desc "Install #{name} into #{Muster.project.install_dir}"
+      task :install => dotfile('install')  do
+        logger.info "#{name} #{version} is installed"
+      end
+
+      file dotfile( 'install' ) => "#{name}:build" do 
+        logger.info "Installing #{name} #{version}"
+        Dir.chdir( pkg_dir ) do
+          install
+        end
+        dotfile!( 'install' )
+      end
+
+    end
+
 
     #
     # Execute all the build commands

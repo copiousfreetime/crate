@@ -17,6 +17,9 @@ module Muster
     # Directory where the template Muster project is located
     attr_accessor :data
 
+    # behavior options
+    attr_accessor :options
+
     #
     # Create a new instance of Muster and run with the command line _args_.
     #
@@ -27,10 +30,20 @@ module Muster
     end
 
     #
+    # default options
+    #
+    def default_options
+      o = OpenStruct.new
+      o.force = false
+      return o
+    end
+
+    #
     # Create a new Muster object
     #
     def initialize
       @log = Logging::Logger[self]
+      @options = self.default_options
     end
 
     #
@@ -40,6 +53,9 @@ module Muster
       OptionParser.new do |op|
         op.banner << "  project"
 
+        op.on("-f", "--force", "force the overwriting of existing files") do
+          self.options.force = true
+        end
         op.separator ""
         op.separator "common options:"
         op.on_tail( "-h", "--help", "show this message") do
@@ -79,7 +95,9 @@ module Muster
     # Create a new Muster project
     #
     def create_project
-      abort "'#{project}' already exists" if File.exist?( project )
+      unless options.force
+        abort "'#{project}' already exists" if File.exist?( project ) 
+      end
 
       # copy over files from the master project data diretory in muster
       files = project_files
