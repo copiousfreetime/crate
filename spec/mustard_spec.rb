@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__),"spec_helper.rb"))
 
-describe Assimilate do
+describe Mustard do
   before(:each) do
     # some setup
   end

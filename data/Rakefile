@@ -1,7 +1,7 @@
 #
 # Top level Rakefile for building a custom ruby 
 #
-$: << "/Users/jeremy/Projects/muster/lib"
-require 'muster'
-Muster::Project.new( "myruby" ) 
+$: << "/Users/jeremy/Projects/mustard/lib"
+require 'mustard'
+Mustard::Project.new( "myruby" ) 
 

@@ -1,17 +1,17 @@
 require 'rake'
 require 'rake/tasklib'
 require 'rake/clean'
-require 'muster/utils'
-require 'muster/digest'
+require 'mustard/utils'
+require 'mustard/digest'
 
-module Muster
+module Mustard
   # Create a build task that will download, checksum and build and install an
   # upstream source
   #
   # This task will create the following targets:
   #
   class Dependency < ::Rake::TaskLib
-    include ::Muster::Utils
+    include ::Mustard::Utils
     # Name of the task, this is also the Rake namespace underwhich all other
     # tasks will follow
     attr_accessor :name
@@ -29,7 +29,7 @@ module Muster
     attr_accessor :install_commands
 
     #
-    # Create a Muster Dependency with the given name and version
+    # Create a Mustard Dependency with the given name and version
     #
     def initialize( name = nil, version = nil )
       @name = name
@@ -45,28 +45,28 @@ module Muster
     # The build directory for this particular task
     #
     def build_dir
-      @build_dir ||= File.join(Muster.project.build_dir, name )
+      @build_dir ||= File.join(Mustard.project.build_dir, name )
     end
 
     #
     # The recipe directory for this particular task
     #
     def recipe_dir
-      @recipe_dir ||= File.join( Muster.project.recipe_dir, name )
+      @recipe_dir ||= File.join( Mustard.project.recipe_dir, name )
     end
 
     #
     # The fake root directory to install into
     # 
     def install_dir
-      Muster.project.install_dir
+      Mustard.project.install_dir
     end
 
     #
     # handle to the top level logger
     #
     def logger
-      Muster.project.logger
+      Mustard.project.logger
     end
 
     #
@@ -95,7 +95,7 @@ module Muster
     # record the upstream sha1 checksum
     #
     def upstream_sha1=( checksum )
-      @digest = Muster::Digest.sha1( checksum )
+      @digest = Mustard::Digest.sha1( checksum )
     end
     def upstream_sha1; return @digest.hex; end
 
@@ -103,7 +103,7 @@ module Muster
     # record the upstream md5 checksum
     #
     def upstream_md5=( checksum )
-      @digest = Muster::Digest.md5( checksum )
+      @digest = Mustard::Digest.md5( checksum )
     end
     def usptream_md5; return @digest.hex; end
 
@@ -200,7 +200,7 @@ module Muster
     end
 
     def define_install
-      desc "Install #{name} into #{Muster.project.install_dir}"
+      desc "Install #{name} into #{Mustard.project.install_dir}"
       task :install => dotfile('install')  do
         logger.info "#{name} #{version} is installed"
       end

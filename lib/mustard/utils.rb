@@ -5,7 +5,7 @@ require 'fileutils'
 require 'progressbar'
 require 'rubygems/installer'
 
-module Muster
+module Mustard
   #
   # Utiltiy methods useful for many items
   module Utils
@@ -67,7 +67,7 @@ module Muster
     end
 
     #
-    # Wrap a command sending its output to the the Muster.project logger at the
+    # Wrap a command sending its output to the the Mustard.project logger at the
     # debug level
     #
   end

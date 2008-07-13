@@ -1,7 +1,7 @@
 #
-# Muster recipe for ruby version 1.2.3
+# Mustard recipe for ruby version 1.2.3
 #
-Muster::Ruby.new( "ruby", "1.8.6-p114") do |t|
+Mustard::Ruby.new( "ruby", "1.8.6-p114") do |t|
   t.depends_on( "openssl" )
   t.depends_on( "zlib" )
 

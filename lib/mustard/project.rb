@@ -1,10 +1,10 @@
 require 'rake'
 require 'rake/tasklib'
 
-module Muster
+module Mustard
   #
-  # the Muster top level task, there should only be one of these in existence at
-  # a time.  This task is accessible via Muster.project, and is what is defined
+  # the Mustard top level task, there should only be one of these in existence at
+  # a time.  This task is accessible via Mustard.project, and is what is defined
   # in the Rakefile in the project directory.
   #
   class Project < ::Rake::TaskLib
@@ -26,14 +26,14 @@ module Muster
     attr_accessor :install_dir
 
     def initialize( name ) 
-      raise "Muster Project already initialized" if ::Muster.project
+      raise "Mustard Project already initialized" if ::Mustard.project
       @name         = name
       @project_root = File.expand_path( File.dirname( Rake.application.rakefile ) )
       @recipe_dir   = File.join( @project_root, 'recipes' )
       @build_dir    = File.join( @project_root, 'build' )
       @install_dir  = File.join( @project_root, 'fakeroot' )
       yield self if block_given?
-      ::Muster.project = self
+      ::Mustard.project = self
       define
     end
 

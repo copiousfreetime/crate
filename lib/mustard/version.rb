@@ -3,7 +3,7 @@
 # All rights reserved.  See LICENSE and/or COPYING for details
 #++
 
-module Muster
+module Mustard
   module Version
     MAJOR   = 0
     MINOR   = 1

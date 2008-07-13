@@ -1,10 +1,10 @@
-require 'muster/dependency'
-require 'muster/gem_integration'
+require 'mustard/dependency'
+require 'mustard/gem_integration'
 
-module Muster
+module Mustard
   class Ruby < Dependency
     #
-    # Create a Muster Ruby  with the given name and version
+    # Create a Mustard Ruby  with the given name and version
     #
     def initialize( name = nil, version = nil )
       @name = name
@@ -14,7 +14,7 @@ module Muster
       yield self if block_given?
       @upstream_source = URI.parse( @upstream_source )
       define unless name.nil? or version.nil?
-      ::Muster.ruby = self
+      ::Mustard.ruby = self
     end
 
 

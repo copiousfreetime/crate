@@ -1,27 +1,27 @@
-require 'muster'
+require 'mustard'
 
 require 'rubygems'
 require 'optparse'
 require 'find'
 require 'fileutils'
 
-module Muster
-  # The Muster::Main class contains all the functionality needed by the +muster+
+module Mustard
+  # The Mustard::Main class contains all the functionality needed by the +mustard+
   # command line application.  Much of this code is derived from the Webby::Main
   # class
   class Main
 
-    # Directory where the Muster project will be created
+    # Directory where the Mustard project will be created
     attr_accessor :project
 
-    # Directory where the template Muster project is located
+    # Directory where the template Mustard project is located
     attr_accessor :data
 
     # behavior options
     attr_accessor :options
 
     #
-    # Create a new instance of Muster and run with the command line _args_.
+    # Create a new instance of Mustard and run with the command line _args_.
     #
     def self.run( args )
       m = self.new
@@ -39,7 +39,7 @@ module Muster
     end
 
     #
-    # Create a new Muster object
+    # Create a new Mustard object
     #
     def initialize
       @log = Logging::Logger[self]
@@ -47,7 +47,7 @@ module Muster
     end
 
     #
-    # The option parser for Muster
+    # The option parser for Mustard
     #
     def option_parser
       OptionParser.new do |op|
@@ -64,7 +64,7 @@ module Muster
         end
 
         op.on_tail( "--version", "show version" ) do
-          puts "Muster #{::Muster::VERSION}"
+          puts "Mustard #{::Mustard::VERSION}"
           exit 0
         end
       end
@@ -74,7 +74,7 @@ module Muster
     # Parse the command line arguments
     #
     def parse( argv )
-      self.data = ::Muster.data_path
+      self.data = ::Mustard.data_path
       opts = option_parser
       begin
         opts.parse!( argv )
@@ -92,14 +92,14 @@ module Muster
     end
 
     #
-    # Create a new Muster project
+    # Create a new Mustard project
     #
     def create_project
       unless options.force
         abort "'#{project}' already exists" if File.exist?( project ) 
       end
 
-      # copy over files from the master project data diretory in muster
+      # copy over files from the master project data diretory in mustard
       files = project_files
       files.keys.sort.each do |dir|
         mkdir dir
@@ -123,7 +123,7 @@ module Muster
     end
 
     #
-    # Copy a file from the Muster prototype location to the project location.
+    # Copy a file from the Mustard prototype location to the project location.
     # Display a message that the file is being created.
     #
     def cp( file )
@@ -149,7 +149,7 @@ module Muster
     end
 
     #
-    # Iterate over all the feils in the Muster project template directory and
+    # Iterate over all the feils in the Mustard project template directory and
     # store them in a hash
     #
     def project_files
