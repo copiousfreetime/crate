@@ -17,7 +17,7 @@ Muster::Ruby.new( "ruby", "1.8.6-p114") do |t|
     # put the .a files from the fakeroot/usr/lib directory into the package
     # directory so the compilation can use them
     %w[ libz.a libcrypto.a libssl.a ].each do |f| 
-      FileUtils.cp File.join( install_dir, "usr", "lib", f ), pkg_dir, :verbose => true
+      FileUtils.cp File.join( install_dir, "usr", "lib", f ), pkg_dir
     end 
     sh "./configure --disable-shared --prefix=#{File.join( '/', 'usr' )}"
     sh "make"

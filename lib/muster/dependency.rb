@@ -1,5 +1,6 @@
 require 'rake'
 require 'rake/tasklib'
+require 'rake/clean'
 require 'muster/utils'
 require 'muster/digest'
 
@@ -117,7 +118,7 @@ module Muster
     def define
       logger.debug "Defining tasks for #{name} #{version}"
 
-      namespace name do
+      namespace "#{name}" do
         define_download
         define_verify
         define_unpack
@@ -160,7 +161,9 @@ module Muster
       task :unpack => "#{name}:verify" do 
         logger.info "Unpacking"
         unpack( local_source, build_dir )
+        FileUtils.rm_f dotfile( 'patch' )
       end
+      ::CLEAN << pkg_dir
     end
 
     def define_patch
@@ -176,6 +179,8 @@ module Muster
         end
         dotfile!( 'patch' )
       end
+
+      ::CLEAN << dotfile( 'patch' )
     end
 
     def define_build
@@ -191,6 +196,7 @@ module Muster
         end
         dotfile!( 'build' )
       end
+      ::CLEAN << dotfile( 'build' )
     end
 
     def define_install
@@ -206,6 +212,7 @@ module Muster
         end
         dotfile!( 'install' )
       end
+      ::CLEAN << dotfile( 'install' )
 
     end
 
@@ -241,8 +248,9 @@ module Muster
     #
     def sh( cmd )
       logger.info( cmd )
-      io = IO.popen( cmd )
-      until io.eof? 
+
+      io = IO.popen( "#{cmd} 2>&1" )
+      until io.eof?
         logger.debug( io.readline.strip )
       end
     end

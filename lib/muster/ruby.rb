@@ -36,13 +36,17 @@ module Muster
         define_patch
         define_integration
 
+        desc "Integrate ruby modules into final source" 
+        task :integration => "#{name}:patch"
+        file dotfile('build') => :integration
+
+
         define_build
-        task :build => "#{name}:integration"
 
         define_install
 
-        task :done    => "#{name}:install"
-        task :default => "#{name}:done"
+        task :done    => :install
+        task :default => :done
       end
 
       desc "Build and Integrate #{name} #{version}"
@@ -66,8 +70,6 @@ module Muster
     # name:default task
     #
     def define_integration
-      desc "Integrate ruby modules into final source" 
-      task :integration => "#{name}:patch"
     end
 
     def integrates( other )

@@ -20,8 +20,8 @@ module Muster
         define_patch
         define_integration
 
-        task :done    => "#{name}:integrate"
-        task :default => "#{name}:done"
+        task :done    => :integrate
+        task :default => :done
       end
 
       desc "Build and Integrate #{name} #{version}"
@@ -33,7 +33,7 @@ module Muster
     #
     def define_integration
       desc "Integrate #{name} into ruby's build tree"
-      task :integration => [ "#{name}:patch", "ruby:patch" ] do
+      task :integration => [ "#{name}:patch", "ruby:patch" ] do |t|
         logger.info "Integrating #{name} into ruby's tree"
         format = Gem::Format.from_file_by_path( local_source )
 
@@ -53,14 +53,19 @@ module Muster
           integration_info[ rp + File::SEPARATOR ] = Muster.ruby.lib_dir
         end
 
-        install_integration_files integration_info
-        File.open( Muster.ruby.ext_setup_file, "a+" ) do |f|
-          logger.info "updating ext/Setup file to add #{name}"
-          f.puts name
+        install_integration_files( integration_info )
+
+        setup_lines = IO.readlines( Muster.ruby.ext_setup_file )
+        if setup_lines.grep(/^#{name}/).empty? then
+          File.open( Muster.ruby.ext_setup_file, "a+" ) do |f|
+            logger.info "updating ext/Setup file to add #{name}"
+            f.puts name
+          end
         end
       end
     end
 
+    #
     # each of the key value pairs indicates an matching path (the key)  from the
     # gemspec that should be installed into the designated destiation path (the
     # value)

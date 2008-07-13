@@ -7,8 +7,7 @@ Muster::Dependency.new("openssl", "0.9.8h") do |t|
   t.upstream_sha1    = "ced4f2da24a202e01ea22bef30ebc8aee274de86"
 
   t.build_commands = [
-    "./config --prefix=#{File.join( '/', 'usr' )} zlib no-threads no-shared no-kb5",
-    "make depend",
+    "./config --prefix=#{File.join( '/', 'usr' )} zlib no-threads no-shared",
     "make"
   ]
 

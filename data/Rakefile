@@ -3,6 +3,5 @@
 #
 $: << "/Users/jeremy/Projects/muster/lib"
 require 'muster'
-
 Muster::Project.new( "myruby" ) 
 

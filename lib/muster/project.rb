@@ -73,10 +73,11 @@ module Muster
     #
     def define
       desc "Build #{name}"
-      task :build do 
+      task :default => :ruby do 
         logger.info "Build #{name}"
       end
-
+      ::CLEAN << self.install_dir
+      ::CLEAN << "project.log"
       load_rakefiles
     end
 
@@ -86,7 +87,7 @@ module Muster
     def load_rakefiles
       Dir["#{recipe_dir}/*/*.rake"].each do |recipe|
         logger.debug "loading #{recipe}"
-        load recipe
+        import recipe
       end
     end
   end
