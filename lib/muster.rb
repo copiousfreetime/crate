@@ -73,6 +73,13 @@ module Muster
     @project = p
   end
 
+  def self.ruby
+    @ruby
+  end
+  def self.ruby=( r )
+    @ruby = r
+  end
+
 end
 %w[ version utils dependency gem_integration ruby project ].each { |r| require "muster/#{r}" }
 

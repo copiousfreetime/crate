@@ -4,6 +4,21 @@ require 'muster/gem_integration'
 module Muster
   class Ruby < Dependency
     #
+    # Create a Muster Ruby  with the given name and version
+    #
+    def initialize( name = nil, version = nil )
+      @name = name
+      @version = version
+      @install_commands = []
+      @build_commands = []
+      yield self if block_given?
+      @upstream_source = URI.parse( @upstream_source )
+      define unless name.nil? or version.nil?
+      ::Muster.ruby = self
+    end
+
+
+    #
     # Define all the tasks in the namespace of the +name+ of this task.
     #
     # The dependency chain is:
@@ -34,6 +49,17 @@ module Muster
       task name => "#{name}:default"
     end
 
+    def lib_dir
+      File.join( pkg_dir, "lib" )
+    end
+
+    def ext_dir
+      File.join( pkg_dir, "ext" )
+    end
+
+    def ext_setup_file
+      File.join( ext_dir, "Setup" )
+    end
 
     #
     # Add in an integration task that depends on all the Integeration object's
