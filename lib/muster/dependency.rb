@@ -189,7 +189,7 @@ module Muster
         logger.info "#{name} #{version} built"
       end
 
-      file dotfile( 'build' ) => dotfile( 'patch' ) do
+      file dotfile( 'build' ) => "#{name}:patch" do
         logger.info "Bulding #{name} #{version}"
         Dir.chdir( pkg_dir ) do
           build
@@ -250,8 +250,8 @@ module Muster
       logger.info( cmd )
 
       io = IO.popen( "#{cmd} 2>&1" )
-      until io.eof?
-        logger.debug( io.readline.strip )
+      io.each_line do |l|
+        logger.debug( l.strip )
       end
     end
 
