@@ -1,10 +1,10 @@
 require 'rake'
 require 'rake/tasklib'
 
-module Mustard
+module Crate
   #
-  # the Mustard top level task, there should only be one of these in existence at
-  # a time.  This task is accessible via Mustard.project, and is what is defined
+  # the Crate top level task, there should only be one of these in existence at
+  # a time.  This task is accessible via Crate.project, and is what is defined
   # in the Rakefile in the project directory.
   #
   class Project < ::Rake::TaskLib
@@ -26,14 +26,14 @@ module Mustard
     attr_accessor :install_dir
 
     def initialize( name ) 
-      raise "Mustard Project already initialized" if ::Mustard.project
+      raise "Crate Project already initialized" if ::Crate.project
       @name         = name
       @project_root = File.expand_path( File.dirname( Rake.application.rakefile ) )
       @recipe_dir   = File.join( @project_root, 'recipes' )
       @build_dir    = File.join( @project_root, 'build' )
       @install_dir  = File.join( @project_root, 'fakeroot' )
       yield self if block_given?
-      ::Mustard.project = self
+      ::Crate.project = self
       define
     end
 

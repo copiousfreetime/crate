@@ -1,7 +1,7 @@
 require 'digest/md5'
 require 'digest/sha1'
 
-module Mustard
+module Crate
   #
   # A wrapper around a given digest value and the algorithm that creates it.
   # Use it to verify a bytestream.
@@ -13,11 +13,11 @@ module Mustard
 
     class << self
       def sha1( hex )
-        return Mustard::Digest.new( hex, ::Digest::SHA1 )
+        return Crate::Digest.new( hex, ::Digest::SHA1 )
       end
 
       def md5( hex )
-        return Mustard::Digest.new( hex, ::Digest::MD5  )
+        return Crate::Digest.new( hex, ::Digest::MD5  )
       end
     end
 

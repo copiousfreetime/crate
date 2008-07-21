@@ -7,15 +7,15 @@ require 'rubygems'
 require 'logging'
 require 'date'
 
-# Configure Mustard to log to STDOUT at the 'info' level
-Logging::Logger['Mustard'].level = :info
-Logging::Logger['Mustard'].add_appenders( Logging::Appender.stdout )
+# Configure Crate to log to STDOUT at the 'info' level
+Logging::Logger['Crate'].level = :info
+Logging::Logger['Crate'].add_appenders( Logging::Appender.stdout )
 Logging::Appender.stdout.layout = Logging::Layouts::Pattern.new( 
     :pattern      => "[%d] %5l: %m\n",   # [date] LEVEL: message
     :date_pattern => "%H:%M:%S"          # date == HH::MM::SS
 )
 
-module Mustard
+module Crate
 
   # The root directory of the project is considered to be the parent directory
   # of the 'lib' directory.
@@ -81,5 +81,5 @@ module Mustard
   end
 
 end
-%w[ version utils dependency gem_integration ruby project ].each { |r| require "mustard/#{r}" }
+%w[ version utils dependency gem_integration ruby project ].each { |r| require "crate/#{r}" }
 

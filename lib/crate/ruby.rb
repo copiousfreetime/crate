@@ -1,10 +1,10 @@
-require 'mustard/dependency'
-require 'mustard/gem_integration'
+require 'crate/dependency'
+require 'crate/gem_integration'
 
-module Mustard
+module Crate
   class Ruby < Dependency
     #
-    # Create a Mustard Ruby  with the given name and version
+    # Create a Crate Ruby  with the given name and version
     #
     def initialize( name = nil, version = nil )
       @name = name
@@ -14,7 +14,7 @@ module Mustard
       yield self if block_given?
       @upstream_source = URI.parse( @upstream_source )
       define unless name.nil? or version.nil?
-      ::Mustard.ruby = self
+      ::Crate.ruby = self
     end
 
 
@@ -38,15 +38,15 @@ module Mustard
 
         desc "Integrate ruby modules into final source" 
         task :integration => "#{name}:patch"
-        file dotfile('build') => :integration
+        file dotfile('build') => "#{name}:integration"
 
 
         define_build
 
         define_install
 
-        task :done    => :install
-        task :default => :done
+        task :done    => "#{name}:install"
+        task :default => "#{name}:done"
       end
 
       desc "Build and Integrate #{name} #{version}"

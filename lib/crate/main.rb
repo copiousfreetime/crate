@@ -1,27 +1,27 @@
-require 'mustard'
+require 'crate'
 
 require 'rubygems'
 require 'optparse'
 require 'find'
 require 'fileutils'
 
-module Mustard
-  # The Mustard::Main class contains all the functionality needed by the +mustard+
+module Crate
+  # The Crate::Main class contains all the functionality needed by the +crate+
   # command line application.  Much of this code is derived from the Webby::Main
   # class
   class Main
 
-    # Directory where the Mustard project will be created
+    # Directory where the Crate project will be created
     attr_accessor :project
 
-    # Directory where the template Mustard project is located
+    # Directory where the template Crate project is located
     attr_accessor :data
 
     # behavior options
     attr_accessor :options
 
     #
-    # Create a new instance of Mustard and run with the command line _args_.
+    # Create a new instance of Crate and run with the command line _args_.
     #
     def self.run( args )
       m = self.new
@@ -39,7 +39,7 @@ module Mustard
     end
 
     #
-    # Create a new Mustard object
+    # Create a new Crate object
     #
     def initialize
       @log = Logging::Logger[self]
@@ -47,7 +47,7 @@ module Mustard
     end
 
     #
-    # The option parser for Mustard
+    # The option parser for Crate
     #
     def option_parser
       OptionParser.new do |op|
@@ -64,7 +64,7 @@ module Mustard
         end
 
         op.on_tail( "--version", "show version" ) do
-          puts "Mustard #{::Mustard::VERSION}"
+          puts "Crate #{::Crate::VERSION}"
           exit 0
         end
       end
@@ -74,7 +74,7 @@ module Mustard
     # Parse the command line arguments
     #
     def parse( argv )
-      self.data = ::Mustard.data_path
+      self.data = ::Crate.data_path
       opts = option_parser
       begin
         opts.parse!( argv )
@@ -92,14 +92,14 @@ module Mustard
     end
 
     #
-    # Create a new Mustard project
+    # Create a new Crate project
     #
     def create_project
       unless options.force
         abort "'#{project}' already exists" if File.exist?( project ) 
       end
 
-      # copy over files from the master project data diretory in mustard
+      # copy over files from the master project data diretory in crate
       files = project_files
       files.keys.sort.each do |dir|
         mkdir dir
@@ -123,7 +123,7 @@ module Mustard
     end
 
     #
-    # Copy a file from the Mustard prototype location to the project location.
+    # Copy a file from the Crate prototype location to the project location.
     # Display a message that the file is being created.
     #
     def cp( file )
@@ -149,7 +149,7 @@ module Mustard
     end
 
     #
-    # Iterate over all the feils in the Mustard project template directory and
+    # Iterate over all the feils in the Crate project template directory and
     # store them in a hash
     #
     def project_files

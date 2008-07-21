@@ -1,6 +1,6 @@
-require 'mustard/dependency'
+require 'crate/dependency'
 require 'rubygems/format'
-module Mustard
+module Crate
   class GemIntegration < Dependency
     #
     # Define all the tasks in the namespace of the +name+ of this task.
@@ -20,8 +20,8 @@ module Mustard
         define_patch
         define_integration
 
-        task :done    => :integrate
-        task :default => :done
+        task :done    => "#{name}:integrate"
+        task :default => "#{name}:done"
       end
 
       desc "Build and Integrate #{name} #{version}"
@@ -43,21 +43,21 @@ module Mustard
         format.spec.extensions.each do |ext|
           logger.info "integrating #{name} extension #{ext}"
           ext_dirname = File.dirname( ext ) + File::SEPARATOR
-          dest_ext_dir = File.join( Mustard.ruby.ext_dir, name )
+          dest_ext_dir = File.join( Crate.ruby.ext_dir, name )
           integration_info[ ext_dirname ] = dest_ext_dir
           require_paths.delete( File.dirname( ext ) )
         end
 
         require_paths.each do |rp|
           logger.info "integrating #{name} '#{rp}' files "
-          integration_info[ rp + File::SEPARATOR ] = Mustard.ruby.lib_dir
+          integration_info[ rp + File::SEPARATOR ] = Crate.ruby.lib_dir
         end
 
         install_integration_files( integration_info )
 
-        setup_lines = IO.readlines( Mustard.ruby.ext_setup_file )
+        setup_lines = IO.readlines( Crate.ruby.ext_setup_file )
         if setup_lines.grep(/^#{name}/).empty? then
-          File.open( Mustard.ruby.ext_setup_file, "a+" ) do |f|
+          File.open( Crate.ruby.ext_setup_file, "a+" ) do |f|
             logger.info "updating ext/Setup file to add #{name}"
             f.puts name
           end
