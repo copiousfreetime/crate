@@ -5,9 +5,9 @@
    into the basic code, running through the bootstrap table and evalling each
    piece of code as it goes through the system.
 
- * mustard overwrites argc, argv in main, with only the options "-e 'Mustard::boot'"
+ * crate overwrites argc, argv in main, with only the options "-e 'Crate::boot'"
 
- * mustard has a very small C-extension that deals with amalgalite, does low
+ * crate has a very small C-extension that deals with amalgalite, does low
    level calls to the appropriate table and does the boot loader.
 
  * as part of the build need to kill all the $: and such variables with there
@@ -19,11 +19,11 @@
 
  * set RUBYOPT in main and all the other RUBY ENV vars
 
- * rename output executable to 'something from Mustard' file
+ * rename output executable to 'something from Crate' file
 
- * Mustard::boot() -- opens up an sqlitedatabase using the low level amalgalite
+ * Crate::boot() -- opens up an sqlitedatabase using the low level amalgalite
                      methods or sqlite directly.  Selects from a configured 
-                     table 'default "mustard"'  Interates over all the rows
+                     table 'default "crate"'  Interates over all the rows
                      evals each of the 'contents' 
 
   id, filename, contents

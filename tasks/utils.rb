@@ -1,4 +1,4 @@
-require 'mustard/version'
+require 'crate/version'
 
 #-------------------------------------------------------------------------------
 # Additions to the Configuration class that are useful
@@ -69,11 +69,11 @@ module Utils
     def announcement
       cfg = Configuration.for("project") 
       { 
-        :subject        => "#{cfg.name} #{Mustard::VERSION} Released",
-        :title          => "#{cfg.name} version #{Mustard::VERSION} has been released.",
+        :subject        => "#{cfg.name} #{Crate::VERSION} Released",
+        :title          => "#{cfg.name} version #{Crate::VERSION} has been released.",
         :urls           => "#{cfg.homepage}",
         :description    => "#{cfg.description.rstrip}",
-        :release_notes  => Utils.release_notes_from(cfg.history)[Mustard::VERSION].rstrip 
+        :release_notes  => Utils.release_notes_from(cfg.history)[Crate::VERSION].rstrip 
       }
     end
   end

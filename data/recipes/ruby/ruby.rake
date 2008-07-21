@@ -1,7 +1,7 @@
 #
-# Mustard recipe for ruby version 1.2.3
+# Crate recipe for ruby version 1.2.3
 #
-Mustard::Ruby.new( "ruby", "1.8.6-p114") do |t|
+Crate::Ruby.new( "ruby", "1.8.6-p114") do |t|
   t.depends_on( "openssl" )
   t.depends_on( "zlib" )
 

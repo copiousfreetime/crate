@@ -7,11 +7,11 @@ require 'tasks/utils'
 # General project configuration
 #-----------------------------------------------------------------------
 Configuration.for('project') {
-  name          "mustard"
+  name          "crate"
   version       "0.1.0"
   author        "Jeremy Hinegardner"
   email         "jeremy@copiousfreetime.org"
-  homepage      "http://copiousfreetime.rubyforge.org/mustard"
+  homepage      "http://copiousfreetime.rubyforge.org/crate"
   description   Utils.section_of("README", "description")
   summary       description.split(".").first
   history       "HISTORY"
@@ -92,7 +92,7 @@ Configuration.for('rubyforge') {
   project       "copiousfreetime"
   user          "jjh"
   host          "rubyforge.org"
-  rdoc_location "#{user}@#{host}:/var/www/gforge-projects/#{project}/mustard"
+  rdoc_location "#{user}@#{host}:/var/www/gforge-projects/#{project}/crate"
 }
 
 

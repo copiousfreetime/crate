@@ -24,13 +24,13 @@ require 'rake/clean'
 # Main configuration for the project, these overwrite the items that are in
 # tasks/config.rb
 #-------------------------------------------------------------------------------
-require 'mustard'
+require 'crate'
 Configuration.for("project") {
-  name      "mustard"
-  version   Mustard::VERSION
+  name      "crate"
+  version   Crate::VERSION
   author    "Jeremy Hinegardner"
   email     "jeremy@copiousfreetime.org"
-  homepage  "http://copiousfreetime.rubyforge.org/mustard/"
+  homepage  "http://copiousfreetime.rubyforge.org/crate/"
 }
 
 #-------------------------------------------------------------------------------

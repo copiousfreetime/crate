@@ -1,13 +1,13 @@
-== mustard
+== crate
 
-* Homepage[http://copiousfreetime.rubyforge.org/mustard]
+* Homepage[http://copiousfreetime.rubyforge.org/crate]
 * {Rubyforge Project}[http://rubyforge.org/projects/copiousfreetime/]
 * email jeremy at copiousfreetime dot org 
-* git clone url git://github.com/copiousfreetime/mustard.git
+* git clone url git://github.com/copiousfreetime/crate.git
 
 == DESCRIPTION
 
-Mustard is a developer tool to help build custom distributions of ruby.  
+Crate is a developer tool to help build custom distributions of ruby.  
 
 == FEATURES
 

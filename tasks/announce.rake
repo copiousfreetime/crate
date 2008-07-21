@@ -21,7 +21,7 @@ namespace :announce do
       mail.puts 
       mail.puts info[:description]
       mail.puts 
-      mail.puts "{{ Release notes for Version #{Mustard::VERSION} }}"
+      mail.puts "{{ Release notes for Version #{Crate::VERSION} }}"
       mail.puts 
       mail.puts info[:release_notes]
       mail.puts

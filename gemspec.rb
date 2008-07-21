@@ -1,11 +1,11 @@
 require 'rubygems'
-require 'mustard/version'
+require 'crate/version'
 require 'tasks/config'
 
-Mustard::GEM_SPEC = Gem::Specification.new do |spec|
+Crate::GEM_SPEC = Gem::Specification.new do |spec|
   proj = Configuration.for('project')
   spec.name         = proj.name
-  spec.version      = Mustard::VERSION
+  spec.version      = Crate::VERSION
   
   spec.author       = proj.author
   spec.email        = proj.email

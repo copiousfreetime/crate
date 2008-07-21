@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
 begin
-  require 'mustard/main'
+  require 'crate/main'
 rescue LoadError
   $: << File.expand_path( File.join( File.dirname( __FILE__ ), %w[ .. lib ] ) ) 
-  require 'mustard/main'
+  require 'crate/main'
 end
-::Mustard::Main.run( ARGV )
+::Crate::Main.run( ARGV )

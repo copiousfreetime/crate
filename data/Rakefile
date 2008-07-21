@@ -1,7 +1,7 @@
 #
 # Top level Rakefile for building a custom ruby 
 #
-$: << "/Users/jeremy/Projects/mustard/lib"
-require 'mustard'
-Mustard::Project.new( "myruby" ) 
+$: << "/Users/jeremy/Projects/crate/lib"
+require 'crate'
+Crate::Project.new( "myruby" ) 
 

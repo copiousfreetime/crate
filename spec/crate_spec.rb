@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__),"spec_helper.rb"))
 
-describe Mustard do
+describe Crate do
   before(:each) do
     # some setup
   end
