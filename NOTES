@@ -1,7 +1,3 @@
- *  Top level project should have everything that is in ext/Setup so that the
-    user can pick what they want to install, this replaces the patch that goes
-    for ruby Rakefile in that lib 
-
  *  pack all ruby source code that is installed and put it into the rubylibs
     table
 
@@ -9,18 +5,69 @@
    into the basic code, running through the bootstrap table and evalling each
    piece of code as it goes through the system.
 
+  VALUE crate_wrap_app( VALUE args )
+  {
+      VALUE *values = (VALUE *) args;
+      VALUE app     = values[0];
+      VALUE method  = values[1];
+
+      return rb_funcall2( app, method, rb_gv_get("ARGV") )
+
+  }
+
+  VALUE crate_protected_app( VALUE app, VALUE method, int* state )
+  {
+    VALUE args[2];
+    VALUE result = Qnil;
+    args[0] = app;
+    args[1] = method;
+
+    result = rb_protect( crate_wrap_app, (VALUE)args, state);
+    return result;
+  }
+
+
+
+
+  int main( int argc, char** argv) {
+  ruby_init()
+  ruby_script("myapp")
+  ruby_set_argv( argc, argv );
+  ruby_init_loadpath()
+
+  amalgalite_load_from_table( ... ) // boot amalgalite
+  amalgalite_load_from_table( .... ) // appliation class
+
+  // use the funcall2 instead, with the protect methods from the Pickaxe
+  int state = 0;
+  VALUE result  = crate_app_protect( "AppClass.new.run_method( ARGV )", &state);
+  int rc = 0;
+
+  if ( state ) {
+     // find out what the ruby_errinfo is and do something with it
+
+     // if it was system exit then exit with that number
+  } else {
+
+     // no exception so exit 0;
+  }
+  ruby_finalize() ;
+  exit( rc );
+}
+
+
  * crate overwrites argc, argv in main, with only the options "-e 'Crate::boot'"
 
  * crate has a very small C-extension that deals with amalgalite, does low
    level calls to the appropriate table and does the boot loader.
 
  * kill all other command line parsing
+ 
  * force all commandline options to be pushed to the script, push a '--' infront
    of the commands ?
-
- * set RUBYOPT in main and all the other RUBY ENV vars
 
  * rename output executable to 'something from Crate' file
 
   id, filename, contents
+
 
