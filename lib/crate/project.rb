@@ -25,6 +25,9 @@ module Crate
     # default 'fakeroot'
     attr_accessor :install_dir
 
+    # The list of extensions to compile
+    attr_reader :extensions
+
     def initialize( name ) 
       raise "Crate Project already initialized" if ::Crate.project
       @name         = name
@@ -47,6 +50,10 @@ module Crate
 
     def install_dir=( id )
       @install_dir = File.join( project_root, id )
+    end
+
+    def extensions=( list )
+      @extensions = list.select { |l| l.index("#").nil? }
     end
 
     #

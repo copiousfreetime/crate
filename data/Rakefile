@@ -3,5 +3,41 @@
 #
 $: << "/Users/jeremy/Projects/crate/lib"
 require 'crate'
-Crate::Project.new( "myruby" ) 
+Crate::Project.new( "myruby" ) do |crate|
+  # remove the ones you do not want, or leave them commented out with a #
+  crate.extensions = %w[
+      #Win32API
+      bigdecimal
+      #curses
+      #dbm
+      #digest
+      #digest/md5
+      #digest/rmd160
+      #digest/sha1
+      #digest/sha2
+      #dl
+      enumerator
+      etc
+      fcntl
+      #gdbm
+      #iconv
+      io/wait
+      #nkf
+      #pty
+      openssl
+      #racc/cparse
+      #readline
+      #sdbm
+      socket
+      stringio
+      strscan
+      syck
+      #syslog
+      #tcltklib
+      thread
+      #tk
+      #win32ole
+      zlib
+  ]
+end
 

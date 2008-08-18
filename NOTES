@@ -1,5 +1,9 @@
+ *  Top level project should have everything that is in ext/Setup so that the
+    user can pick what they want to install, this replaces the patch that goes
+    for ruby Rakefile in that lib 
+
  *  pack all ruby source code that is installed and put it into the rubylibs
-   table
+    table
 
  * generate a bootstrap piece of C code to overload the ruby main and launch
    into the basic code, running through the bootstrap table and evalling each
@@ -10,9 +14,6 @@
  * crate has a very small C-extension that deals with amalgalite, does low
    level calls to the appropriate table and does the boot loader.
 
- * as part of the build need to kill all the $: and such variables with there
-   initial values, $" should be empty and so should $:
-
  * kill all other command line parsing
  * force all commandline options to be pushed to the script, push a '--' infront
    of the commands ?
@@ -20,11 +21,6 @@
  * set RUBYOPT in main and all the other RUBY ENV vars
 
  * rename output executable to 'something from Crate' file
-
- * Crate::boot() -- opens up an sqlitedatabase using the low level amalgalite
-                     methods or sqlite directly.  Selects from a configured 
-                     table 'default "crate"'  Interates over all the rows
-                     evals each of the 'contents' 
 
   id, filename, contents
 
