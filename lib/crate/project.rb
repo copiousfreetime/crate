@@ -80,8 +80,9 @@ module Crate
     #
     def define
       desc "Build #{name}"
-      task :default => :ruby do 
+      task :default => [ :ruby, main_c ] do 
         logger.info "Build #{name}"
+        #logger.info ::Crate.ruby.inspect 
       end
       ::CLEAN << self.install_dir
       ::CLEAN << "project.log"
