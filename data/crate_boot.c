@@ -2,9 +2,14 @@
 #include <getopt.h>
 #include <ruby.h>
 
+/** from ruby's original main.c **/
+#if defined(__MACOS__) && defined(__MWERKS__)
+#include <console.h>
+#endif
+
 #define CRATE_MAIN_FILE   "application.rb"
 #define CRATE_MAIN_CLASS  "App"
-#define CRATE_RUN_METHOD "run"
+#define CRATE_RUN_METHOD  "run"
 
 struct crate_app {
   char  *file_name;
@@ -75,13 +80,31 @@ static VALUE dump_backtrace( VALUE elem, VALUE n )
   fprintf( stderr, "\tfrom %s\n", RSTRING(elem)->ptr );
 }
 
+/**
+ * ifdef items from ruby's original main.c
+ */
+
+/* to link startup code with ObjC support */
+#if (defined(__APPLE__) || defined(__NeXT__)) && defined(__MACH__)
+static void objcdummyfunction( void ) { objc_msgSend(); }
+#endif
+
+
 int main( int argc, char** argv ) 
 {
-  int state = 0;
-  int rc    = 0;
+  int state  = 0;
+  int rc     = 0;
   int opt_mv = 0;
 
   crate_app ca;
+
+  /** startup items from ruby's original main.c */
+#ifdef _WIN32
+  NtInitialize(&argc, &argv);
+#endif
+#if defined(__MACOS__) && defined(__MWERKS__)
+  argc = ccommand(&argv);
+#endif
 
   /* setup ruby */
   ruby_init();
