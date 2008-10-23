@@ -66,7 +66,7 @@ module Crate
     end
 
     #
-    # each of the key value pairs indicates an matching path (the key)  from the
+    # each of the key value pairs indicates a matching path (the key)  from the
     # gemspec that should be installed into the designated destiation path (the
     # value)
     #

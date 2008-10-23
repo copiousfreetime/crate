@@ -149,11 +149,11 @@ module Crate
     end
 
     #
-    # Iterate over all the feils in the Crate project template directory and
+    # Iterate over all the files in the Crate project template directory and
     # store them in a hash
     #
     def project_files
-      keep       = %r/.rake$|Rakefile$|.patch$/
+      keep       = %r/.rake$|Rakefile$|.patch$|.c$/
       strip_path = %r/\A#{data}?/o
       paths      = Hash.new { |h,k| h[k] = [] }
       Find.find( data ) do |path|

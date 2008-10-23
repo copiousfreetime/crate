@@ -4,7 +4,7 @@ require 'crate/gem_integration'
 module Crate
   class Ruby < Dependency
     #
-    # Create a Crate Ruby  with the given name and version
+    # Create a Crate Ruby with the given name and version
     #
     def initialize( name = nil, version = nil )
       @name = name

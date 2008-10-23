@@ -2,3 +2,4 @@
 *.swo
 *.swp
 pkg/
+coverage/

@@ -1,7 +1,7 @@
 #
 # The recipe for integrating amalgalite into the ruby build
 #
-Crate::GemIntegration.new("amalgalite", "0.4.0") do |t|
-  t.upstream_source  = "http://www.copiousfreetime.org/gems/gems/amalgalite-0.4.0.gem"
-  t.upstream_sha1    = "410ddb2e96c74ff12d8542079fcb5d7951b267e4"
+Crate::GemIntegration.new("amalgalite", "0.4.3") do |t|
+  t.upstream_source  = "http://www.copiousfreetime.org/gems/gems/amalgalite-0.4.3.gem"
+  t.upstream_sha1    = "569c497f56bfe95d6a7abe4834f5372394857b5a"
 end
