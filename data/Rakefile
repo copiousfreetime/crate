@@ -2,7 +2,7 @@
 # Top level Rakefile for building a custom ruby 
 #
 require 'crate'
-Crate::Project.new( "myruby" ) do |crate|
+Crate::Project.new( "mycrateapp" ) do |crate|
   # remove the ones you do not want, or leave them commented out with a #
   crate.extensions = %w[
       #Win32API

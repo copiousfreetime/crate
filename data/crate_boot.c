@@ -119,8 +119,12 @@ int main( int argc, char** argv )
   /* make ARGV available */
   ruby_set_argv( argc, argv );
 
+  /* load up the amalgalite libs */
+  printf(" am_bootstrap_lift .. \n");
+  am_bootstrap_lift( Qnil, Qnil );
+  
   /* require the class file */
-  /* amalgalite_require_file */
+  printf(" Requiring %s\n", ca.file_name );
   rb_require( ca.file_name );
 
   /* get an instance of the application class and pack up the instance and the
