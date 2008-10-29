@@ -1,0 +1,3 @@
+* how to integrate other gems
+* how to do some ther extension
+*

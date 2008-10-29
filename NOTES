@@ -71,3 +71,5 @@
   id, filename, contents
 
 
+* for compression, add in a flag on the table to say if the
+  contents are compressed or not.

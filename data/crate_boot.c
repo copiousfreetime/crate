@@ -95,6 +95,7 @@ int main( int argc, char** argv )
   int state  = 0;
   int rc     = 0;
   int opt_mv = 0;
+  VALUE cARB = Qnil;
 
   crate_app ca;
 
@@ -120,8 +121,10 @@ int main( int argc, char** argv )
   ruby_set_argv( argc, argv );
 
   /* load up the amalgalite libs */
+  cARB = rb_const_get( rb_cObject, rb_intern( "Amalgalite::Requires::Bootstrap" ) );
+
   printf(" am_bootstrap_lift .. \n");
-  am_bootstrap_lift( Qnil, Qnil );
+  am_bootstrap_lift( cARB, Qnil );
   
   /* require the class file */
   printf(" Requiring %s\n", ca.file_name );

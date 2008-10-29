@@ -10,7 +10,6 @@
 $: << File.expand_path(File.join(File.dirname(__FILE__),"lib"))
 $: << File.expand_path(File.dirname(__FILE__))
 
-
 #-------------------------------------------------------------------------------
 # load the global project configuration and add in the top level clean and
 # clobber tasks so that other tasks can utilize those constants if necessary
