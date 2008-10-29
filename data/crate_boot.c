@@ -33,12 +33,16 @@ int crate_init_from_options(crate_app *ca, int argc, char** argv )
 {
   int ch ;
   int done = 0;
+  int old_opterr = opterr;
+
+  /* turn off printing to stderr */
+  opterr = 0;
 
   ca->file_name   = CRATE_MAIN_FILE;
   ca->class_name  = CRATE_MAIN_CLASS;
   ca->method_name = CRATE_RUN_METHOD;
     
-  while ( !done && (ch = getopt_long( argc, argv, "", longopts, NULL ) ) != 1 ) {
+  while ( !done && (ch = getopt_long( argc, argv, "", longopts, NULL ) ) != -1 ) {
     switch ( ch ) {
     case 1:
       ca->file_name = optarg;
@@ -53,11 +57,16 @@ int crate_init_from_options(crate_app *ca, int argc, char** argv )
       break;
 
     default:
+      /* if we have a non-option then we are done and be sure to decrement
+       * optind so we keep the option that caused it to faile
+       */
       done = 1;
+      optind--;
       break;
     }
   }
-  
+ 
+  opterr = old_opterr;
   return optind;
 }
 
@@ -68,7 +77,22 @@ int crate_init_from_options(crate_app *ca, int argc, char** argv )
 VALUE crate_wrap_app( VALUE arg )
 {
   crate_app *ca = (crate_app*)arg;
+  char buf[BUFSIZ];
+  char* dot ;
 
+  /* require the class file */
+
+  dot = strchr( ca->file_name, '.');
+  if ( NULL != dot ) { *dot = '\0' ; }
+  sprintf( buf,"Amalgalite::Requires.new( :dbfile_name => 'lib.db' ) ; require '%s'", ca->file_name );
+  rb_eval_string(buf);
+
+  /* get an instance of the application class and pack up the instance and the
+   * method 
+   */
+  ca->app_instance = rb_class_new_instance(0, 0, rb_const_get( rb_cObject, rb_intern( ca->class_name ) ) );
+  ca->run_method   = rb_intern( ca->method_name );
+ 
   return rb_funcall( ca->app_instance, 
                      ca->run_method, 2, 
                      rb_const_get_at( rb_cObject, rb_intern("ARGV") ), 
@@ -89,13 +113,13 @@ static VALUE dump_backtrace( VALUE elem, VALUE n )
 static void objcdummyfunction( void ) { objc_msgSend(); }
 #endif
 
+extern VALUE cARB;
 
 int main( int argc, char** argv ) 
 {
   int state  = 0;
   int rc     = 0;
   int opt_mv = 0;
-  VALUE cARB = Qnil;
 
   crate_app ca;
 
@@ -120,22 +144,13 @@ int main( int argc, char** argv )
   /* make ARGV available */
   ruby_set_argv( argc, argv );
 
-  /* load up the amalgalite libs */
-  cARB = rb_const_get( rb_cObject, rb_intern( "Amalgalite::Requires::Bootstrap" ) );
+  /* initialize all extensions */
+  Init_ext();
 
-  printf(" am_bootstrap_lift .. \n");
+  /* load up the amalgalite libs */
   am_bootstrap_lift( cARB, Qnil );
   
-  /* require the class file */
-  printf(" Requiring %s\n", ca.file_name );
-  rb_require( ca.file_name );
 
-  /* get an instance of the application class and pack up the instance and the
-   * method 
-   */
-  ca.app_instance = rb_class_new_instance(0, 0, rb_const_get( rb_cObject, rb_intern( ca.class_name ) ) );
-  ca.run_method   = rb_intern( ca.method_name );
- 
   /* invoke the class / method passing in ARGV and ENV */
   rb_protect( crate_wrap_app, (VALUE)&ca, &state );
 
@@ -149,7 +164,7 @@ int main( int argc, char** argv )
     if ( rb_obj_is_instance_of( lasterr, rb_eSystemExit ) ) {
 
       rc = NUM2INT( rb_attr_get( lasterr, rb_intern("status") ) );
-      printf(" Caught SystemExit -> $? will be %d\n", rc );
+      /*printf(" Caught SystemExit -> $? will be %d\n", rc ); */
 
     } else {
 
@@ -171,7 +186,4 @@ int main( int argc, char** argv )
   /* exit the program */
   exit( rc );
 }
-
-
-
 
