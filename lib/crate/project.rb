@@ -33,6 +33,10 @@ module Crate
     # The list of extensions to compile
     attr_reader :extensions
 
+    # The list of application files to pack into the app.db
+    # This is an array of PackingList
+    attr_reader :packing_lists
+
     def initialize( name ) 
       raise "Crate Project already initialized" if ::Crate.project
       @name         = name
@@ -64,6 +68,10 @@ module Crate
 
     def extensions=( list )
       @extensions = list.select { |l| l.index("#").nil? }
+    end
+
+    def packing_lists=( list )
+      @packing_lists = [ list ].flatten
     end
 
     #
@@ -132,17 +140,34 @@ module Crate
     #
     def define
       lib_db = File.join( dist_dir, "lib.db" )
+      app_db = File.join( dist_dir, "app.db" )
       directory dist_dir
+      packer_cmd = "~/Projects/amalgalite/bin/amalgalite-pack"
 
       task :pack_ruby => dist_dir do
-        logger.info "Storing rubylib in #{lib_db}"
-        ::Amalgalite::Requires.store_dir_in_db( File.join( ::Crate.ruby.pkg_dir, "lib" ), :dbfile => lib_db )
+        prefix = File.join( ::Crate.ruby.pkg_dir, "lib" )
+        
+        logger.info "Packing ruby standard lib into #{lib_db}"
+        cmd = "#{packer_cmd} --drop-table --db #{lib_db} --compress --strip-prefix #{prefix} #{prefix}" 
+        logger.debug cmd
+        sh "#{cmd} > /dev/null"
       end
 
       task :pack_amalgalite => dist_dir do
-        cmd = "~/Projects/amalgalite/bin/amalgalite-pack-into-db --force #{lib_db}"
-        logger.info cmd
+        logger.info "Packing amalalite into #{lib_db}"
+        cmd = "#{packer_cmd} --drop-table --db #{lib_db} --self"
+        logger.debug cmd
         sh "#{cmd} > /dev/null"
+      end
+
+      task :pack_app => [ :pack_amalgalite, :pack_ruby ] do
+        logger.info "Packing application into #{app_db}"
+        Crate.project.packing_lists.each_with_index do |pl,idx|
+          pc = ( idx == 0 ) ? "#{packer_cmd} --drop-table" : packer_cmd.dup
+          cmd = "#{pc} --db #{app_db} --merge --compress --strip-prefix #{pl.prefix} #{pl.file_list.join(' ')} "
+          logger.debug cmd
+          sh "#{cmd} > /dev/null"
+        end
       end
 
       file "crate_boot.o" => "crate_boot.c" do
@@ -156,7 +181,7 @@ module Crate
 
       desc "Build #{name}"
       #task :default => [ :ruby ] do 
-      task :default => [ app_path, :pack_amalgalite, :pack_ruby ] do
+      task :default => [ app_path, :pack_app ] do
         logger.info "Build #{name}"
         compile_crate_boot
         link_project

@@ -38,22 +38,25 @@ int crate_init_from_options(crate_app *ca, int argc, char** argv )
   /* turn off printing to stderr */
   opterr = 0;
 
-  ca->file_name   = CRATE_MAIN_FILE;
-  ca->class_name  = CRATE_MAIN_CLASS;
-  ca->method_name = CRATE_RUN_METHOD;
+  ca->file_name   = strdup( CRATE_MAIN_FILE );
+  ca->class_name  = strdup( CRATE_MAIN_CLASS );
+  ca->method_name = strdup( CRATE_RUN_METHOD );
     
   while ( !done && (ch = getopt_long( argc, argv, "", longopts, NULL ) ) != -1 ) {
     switch ( ch ) {
     case 1:
-      ca->file_name = optarg;
+      free( ca->file_name );
+      ca->file_name = strdup( optarg );
       break;
 
     case 2:
-      ca->class_name = optarg;
+      free( ca->class_name );
+      ca->class_name = strdup( optarg );
       break;
 
     case 3:
-      ca->method_name = optarg;
+      free( ca->method_name );
+      ca->method_name = strdup( optarg );
       break;
 
     default:
@@ -77,6 +80,8 @@ int crate_init_from_options(crate_app *ca, int argc, char** argv )
 VALUE crate_wrap_app( VALUE arg )
 {
   crate_app *ca = (crate_app*)arg;
+  char *r = "Amalgalite::Requires.new( :dbfile_name => 'lib.db' )\n"\
+            "Amalgalite::Requires.new( :dbfile_name => 'app.db' )\n";
   char buf[BUFSIZ];
   char* dot ;
 
@@ -84,7 +89,7 @@ VALUE crate_wrap_app( VALUE arg )
 
   dot = strchr( ca->file_name, '.');
   if ( NULL != dot ) { *dot = '\0' ; }
-  sprintf( buf,"Amalgalite::Requires.new( :dbfile_name => 'lib.db' ) ; require '%s'", ca->file_name );
+  sprintf( buf,"%s\nrequire '%s'", r, ca->file_name);
   rb_eval_string(buf);
 
   /* get an instance of the application class and pack up the instance and the
@@ -140,7 +145,11 @@ int main( int argc, char** argv )
   opt_mv = crate_init_from_options( &ca, argc, argv );
   argc -= opt_mv;
   argv += opt_mv;
-  
+ 
+  /* printf("crate file  : %s\n", ca.file_name);   */
+  /* printf("crate class : %s\n", ca.class_name);  */
+  /* printf("crate method: %s\n", ca.method_name); */
+
   /* make ARGV available */
   ruby_set_argv( argc, argv );
 
@@ -179,6 +188,10 @@ int main( int argc, char** argv )
       rc = state;
     }
   } 
+
+  free( ca.file_name );
+  free( ca.class_name );
+  free( ca.method_name );
 
   /* shut down ruby */
   ruby_finalize();

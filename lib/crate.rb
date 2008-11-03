@@ -81,5 +81,5 @@ module Crate
   end
 
 end
-%w[ version utils dependency gem_integration ruby project ].each { |r| require "crate/#{r}" }
+%w[ version packing_list utils dependency gem_integration ruby project ].each { |r| require "crate/#{r}" }
 
