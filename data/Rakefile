@@ -12,10 +12,10 @@ Crate::Project.new( PROJ_NAME ) do |crate|
       bigdecimal
       #curses
       #dbm
-      #digest
-      #digest/md5
+      digest
+      digest/md5
       #digest/rmd160
-      #digest/sha1
+      digest/sha1
       #digest/sha2
       #dl
       enumerator

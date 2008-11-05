@@ -33,10 +33,6 @@ module Crate
     # The list of extensions to compile
     attr_reader :extensions
 
-    # The list of application files to pack into the app.db
-    # This is an array of PackingList
-    attr_reader :packing_lists
-
     def initialize( name ) 
       raise "Crate Project already initialized" if ::Crate.project
       @name         = name
@@ -68,6 +64,12 @@ module Crate
 
     def extensions=( list )
       @extensions = list.select { |l| l.index("#").nil? }
+    end
+
+    # The list of application files to pack into the app.db
+    # This is an array of PackingList
+    def packing_lists
+      @packing_lists ||= []
     end
 
     def packing_lists=( list )
