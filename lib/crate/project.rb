@@ -156,7 +156,7 @@ module Crate
       end
 
       task :pack_amalgalite => dist_dir do
-        logger.info "Packing amalalite into #{lib_db}"
+        logger.info "Packing amalgalite into #{lib_db}"
         cmd = "#{packer_cmd} --drop-table --db #{lib_db} --self"
         logger.debug cmd
         sh "#{cmd} > /dev/null"
