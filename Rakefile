@@ -17,8 +17,11 @@ $: << File.expand_path(File.dirname(__FILE__))
 #-------------------------------------------------------------------------------
 require 'rubygems'
 require 'tasks/config.rb'
+require 'gemspec'
 require 'rake/clean'
-
+require 'rake/gempackagetask'
+require 'rake/rdoctask'
+require 'spec/rake/spectask'
 #-------------------------------------------------------------------------------
 # Main configuration for the project, these overwrite the items that are in
 # tasks/config.rb
