@@ -8,3 +8,4 @@
   automatically add the 'lib.db' and 'app.db'.  If the app.db doesn't exist do
   nothing with it. 
 * do Amalgalite updates
+* Look at smalltalk images ... how that is done. -- ask Eric for pointers.... and Ryan
