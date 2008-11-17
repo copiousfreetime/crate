@@ -3,5 +3,5 @@
 #
 Crate::GemIntegration.new("amalgalite", "0.5.0") do |t|
   t.upstream_source  = "http://www.copiousfreetime.org/gems/gems/amalgalite-0.5.0.gem"
-  t.upstream_sha1    = "df862827bbcd5b49a3249b67478ea9b2d601ac8c"
+  t.upstream_sha1    = "116f4c5c18576fb1df57f1f9faaec4f0015400a9"
 end
