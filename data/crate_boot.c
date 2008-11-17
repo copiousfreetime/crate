@@ -158,7 +158,9 @@ int main( int argc, char** argv )
 
   /* load up the amalgalite libs */
   am_bootstrap_lift( cARB, Qnil );
-  
+ 
+  /* remove the current LOAD_PATH */
+  rb_ary_clear( rb_gv_get( "$LOAD_PATH" ) );
 
   /* invoke the class / method passing in ARGV and ENV */
   rb_protect( crate_wrap_app, (VALUE)&ca, &state );
