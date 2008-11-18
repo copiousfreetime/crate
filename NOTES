@@ -1,11 +1,6 @@
-* hook in the naming of the executable to be the target of the top level rake task
 * add in a list of rubylibs to be packed into the top level task similarly to
   what exists for the extensions
-* Add in configuration for what the default file, Class and method are
-* for compression, add in a flag on the table to say if the
-  contents are compressed or not.
 * expose the lib.db and app.db files to the commandline with reasonable defaults.
   automatically add the 'lib.db' and 'app.db'.  If the app.db doesn't exist do
   nothing with it. 
-* do Amalgalite updates
-* Look at smalltalk images ... how that is done. -- ask Eric for pointers.... and Ryan
+* add in dependency between default and :ruby tasks

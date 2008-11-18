@@ -33,6 +33,16 @@ module Crate
     # The list of extensions to compile
     attr_reader :extensions
 
+    # The 'main' file
+    attr_accessor :main_file
+
+    # The 'main' class which is instantiated to start the application
+    attr_accessor :main_class
+
+    # The method on an instance of 'main_class' to invoke with ARGV, ENV
+    # arguments to start the crate based program.
+    attr_accessor :run_method
+
     def initialize( name ) 
       raise "Crate Project already initialized" if ::Crate.project
       @name         = name
@@ -111,10 +121,30 @@ module Crate
       return @compile_params
     end
 
+    #
+    # Create the crate_boot.h file
+    #
+    def create_crate_boot_h
+      File.open( "crate_boot.h", "w+" ) do |h|
+        h.puts <<-CRATE_BOOT_H
+/**
+ * Automatcially generated.  Do not edit.  To change the contents of
+ * this file, update your project main_file, main_class and run_method
+ * options and rebuild.
+ */
+#define CRATE_MAIN_FILE  "#{Crate.project.main_file}"
+#define CRATE_MAIN_CLASS "#{Crate.project.main_class}"
+#define CRATE_RUN_METHOD "#{Crate.project.run_method}"
+CRATE_BOOT_H
+      end
+    end
+
+
     # 
     # Compile the crate_boot stub to an object file
     #
     def compile_crate_boot
+      create_crate_boot_h
       compile_options = %w[ CFLAGS XCFLAGS CPPFLAGS ].collect { |c| compile_params[c] }.join(' ')
       cmd = "#{compile_params['CC']} #{compile_options} -I#{Crate.ruby.pkg_dir} -o crate_boot.o -c crate_boot.c"
       logger.debug cmd
@@ -163,7 +193,7 @@ module Crate
       end
 
       task :pack_app => [ :pack_amalgalite, :pack_ruby ] do
-        logger.info "Packing application into #{app_db}"
+        logger.info "Packing project packing lists lists into #{app_db}"
         Crate.project.packing_lists.each_with_index do |pl,idx|
           pc = ( idx == 0 ) ? "#{packer_cmd} --drop-table" : packer_cmd.dup
           cmd = "#{pc} --db #{app_db} --merge --compress --strip-prefix #{pl.prefix} #{pl.file_list.join(' ')} "

@@ -7,9 +7,7 @@
 #include <console.h>
 #endif
 
-#define CRATE_MAIN_FILE   "application.rb"
-#define CRATE_MAIN_CLASS  "App"
-#define CRATE_RUN_METHOD  "run"
+#include "crate_boot.h"
 
 struct crate_app {
   char  *file_name;
