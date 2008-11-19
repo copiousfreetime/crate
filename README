@@ -12,12 +12,7 @@ Crate is a developer tool to help build custom distributions of ruby.
 == INSTALL
 
 gems:
-gem install configuration logging archive-tar-minitar progressbar
-git clone git://github.com/copiousfreetime/amalgalite.git
-cd amalgalite
-rake dist:install
-cd ..
-cd crate
+gem install configuration logging archive-tar-minitar progressbar amalgalite
 rake dist:install
 
 == FEATURES
