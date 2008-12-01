@@ -45,7 +45,7 @@ if rf_conf = Configuration.for_if_exist?("rubyforge") then
       info = Utils.announcement
 
       puts "Subject : #{info[:subject]}"
-      msg = "#{info[:title]}\n\n#{info[:urls]}\n\n#{info[:release_notes]}"
+      msg = "#{info[:title]}\n\n#{info[:urls]}\n\n#{info[:description]}\n\n#{info[:release_notes]}"
       puts msg
 
       rubyforge = RubyForge.new
