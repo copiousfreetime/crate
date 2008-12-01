@@ -1,6 +1,7 @@
 = Changelog
 == Version 0.1.1
 
+* fix packing of ruby stdlib extension's pure ruby components
 * checksum on upstream source is optional
 
 == Version 0.1.0

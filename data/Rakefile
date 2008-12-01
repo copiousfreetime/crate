@@ -55,7 +55,7 @@ Crate::Project.new( PROJ_NAME ) do |crate|
       #gdbm
       #iconv
       io/wait
-      #nkf
+      nkf
       #pty
       openssl
       #racc/cparse

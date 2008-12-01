@@ -185,6 +185,24 @@ CRATE_BOOT_H
         sh "#{cmd} > /dev/null"
       end
 
+      task :pack_ruby_ext => dist_dir do
+        logger.info "Packing ruby extension libs into #{lib_db}"
+        File.open( ::Crate.ruby.ext_setup_file ) do |f|
+          f.each_line do |line|
+            next if line =~ /\Aoption/
+            next if line.strip.length == 0
+            next if line =~ /\A#/
+
+            prefix = File.join( ::Crate.ruby.ext_dir, line.strip, "lib" )
+            next unless File.directory?( prefix )
+
+            cmd = "#{packer_cmd} --merge --db #{lib_db} --compress --strip-prefix #{prefix} #{prefix}"
+            logger.debug cmd
+            sh "#{cmd} > /dev/null"
+          end
+        end
+      end
+
       task :pack_amalgalite => dist_dir do
         logger.info "Packing amalgalite into #{lib_db}"
         cmd = "#{packer_cmd} --drop-table --db #{lib_db} --self"
@@ -192,7 +210,7 @@ CRATE_BOOT_H
         sh "#{cmd} > /dev/null"
       end
 
-      task :pack_app => [ :pack_amalgalite, :pack_ruby ] do
+      task :pack_app => [ :pack_amalgalite, :pack_ruby, :pack_ruby_ext ] do
         logger.info "Packing project packing lists lists into #{app_db}"
         Crate.project.packing_lists.each_with_index do |pl,idx|
           pc = ( idx == 0 ) ? "#{packer_cmd} --drop-table" : packer_cmd.dup
