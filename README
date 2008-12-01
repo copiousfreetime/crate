@@ -4,22 +4,22 @@
 * {Rubyforge Project}[http://rubyforge.org/projects/copiousfreetime/]
 * email jeremy at copiousfreetime dot org 
 * git clone url git://github.com/copiousfreetime/crate.git
+* {Packaging an Application With Crate}[http://copiousfreetime.org/articles/2008/11/30/package-an-application-with-crate.html
 
 == DESCRIPTION
 
-Crate is a developer tool to help build custom distributions of ruby.  
+Crate is a developer tool to help package up your application as a custom static
+build of the ruby interpreter plus all dependedent binary extensions.  All the
+pure ruby code (the ruby application, the ruby stdlib, etc ) is packed into one
+or more SQLite databases.
+
+The final distributable pieces are a single executable and a few SQLite
+databases which can be then wrapped up appropriately as an OS X App; a self
+extracting executable for Windows; a shar archive, rpm or tarball for Unixes.
 
 == INSTALL
 
-gems:
-gem install configuration logging archive-tar-minitar progressbar amalgalite
-rake dist:install
-
-== FEATURES
-
-== SYNOPSIS
-
-== CREDITS
+gem install crate
 
 == LICENSE
 
