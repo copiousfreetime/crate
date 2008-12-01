@@ -5,11 +5,12 @@
 * email jeremy at copiousfreetime dot org 
 * git clone url git://github.com/copiousfreetime/crate.git
 * {Packaging an Application With Crate}[http://copiousfreetime.org/articles/2008/11/30/package-an-application-with-crate.html]
+* {RubyConf '08 Presentation}[http://rubyconf2008.confreaks.com/crate-packaging-your-ruby-application.html]
 
 == DESCRIPTION
 
 Crate is a developer tool to help package up your application as a custom static
-build of the ruby interpreter plus all dependedent binary extensions.  All the
+build of the ruby interpreter plus all dependent binary extensions.  All the
 pure ruby code (the ruby application, the ruby stdlib, etc ) is packed into one
 or more SQLite databases.
 
