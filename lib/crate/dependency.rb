@@ -97,7 +97,13 @@ module Crate
     def upstream_sha1=( checksum )
       @digest = Crate::Digest.sha1( checksum )
     end
-    def upstream_sha1; return @digest.hex; end
+    def upstream_sha1
+      if @digest then
+        return @digest.hex
+      else
+        return nil
+      end
+    end
 
     #
     # record the upstream md5 checksum
@@ -105,7 +111,13 @@ module Crate
     def upstream_md5=( checksum )
       @digest = Crate::Digest.md5( checksum )
     end
-    def usptream_md5; return @digest.hex; end
+    def usptream_md5
+      if @digest then
+        return @digest.hex
+      else
+        return nil
+      end
+    end
 
     #
     # Define all the tasks in the namespace of the +name+ of this task.
