@@ -159,7 +159,7 @@ module Crate
     def define_verify
       desc "Verify source against its checksum"
       task :verify => "#{name}:download" do 
-        if @digenst then 
+        if @digest then 
           if @digest.valid?( local_source ) then
               logger.info "#{local_source} validates against #{@digest.hex}"
           else
