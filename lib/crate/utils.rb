@@ -4,6 +4,7 @@ require 'open-uri'
 require 'fileutils'
 require 'progressbar'
 require 'rubygems/installer'
+require 'net/ftp'
 
 module Crate
   #
@@ -42,18 +43,27 @@ module Crate
       to_dir = File.dirname( to )
       FileUtils.mkdir_p( to_dir ) unless File.directory?( to_dir )
 
-      pbar = nil 
-      File.open( to , "w" ) do |outf|
-        begin
-          uri.open( :content_length_proc => lambda { |t| pbar = ::ProgressBar.new( File.basename( local_source ), t ) if  t && 0 < t  },  
-                    :progress_proc       => lambda { |s| pbar.set s if pbar } ) do |inf|
-            outf.write inf.read
-          end 
-        rescue => e
-          puts
-          STDERR.puts "Error downloading #{uri.to_s} : #{e}"
-          exit 1
+      # open-uri doesn't work with passive mode ftp in ruby versions prior to 1.9
+      begin
+        if uri.instance_of? URI::FTP
+          Net::FTP.open( uri.host ) do |ftp|
+            ftp.passive = true
+            ftp.login
+            ftp.getbinaryfile( uri.path, to )
+          end
+        else
+          pbar = nil 
+          File.open( to , "w" ) do |outf|      
+            uri.open( :content_length_proc => lambda { |t| pbar = ::ProgressBar.new( File.basename( local_source ), t ) if  t && 0 < t  },  
+                      :progress_proc       => lambda { |s| pbar.set s if pbar } ) do |inf|
+              outf.write inf.read
+            end        
+          end
         end
+      rescue => e
+        puts
+        STDERR.puts "Error downloading #{uri.to_s} : #{e}"
+        exit 1
       end
     end
 
