@@ -16,6 +16,7 @@ Logging::Appender.stdout.layout = Logging::Layouts::Pattern.new(
 )
 
 module Crate
+  class Error < ::StandardError; end
 
   # The root directory of the project is considered to be the parent directory
   # of the 'lib' directory.

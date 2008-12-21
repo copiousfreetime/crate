@@ -20,11 +20,11 @@ Crate::GEM_SPEC = Gem::Specification.new do |spec|
   spec.executables  = pkg.files.bin.collect { |b| File.basename(b) }
 
   # add dependencies here
-  spec.add_dependency("rake", ">= 0.8.1")
-  spec.add_dependency("configuration", "~> 0.0.5")
-  spec.add_dependency("progressbar")
-  spec.add_dependency("archive-tar-minitar")
-  spec.add_dependency("amalgalite", "~> 0.5.0")
+  spec.add_dependency( "rake", "~> 0.8.3")
+  spec.add_dependency( "configuration", "~> 0.0.5")
+  spec.add_dependency( "archive-tar-minitar")
+  spec.add_dependency( "amalgalite", "~> 0.5")
+  spec.add_dependency( "logging", "~> 0.9" )
   
    
   

@@ -1,15 +1,20 @@
 require 'archive/tar/minitar'
 require 'zlib'
-require 'open-uri'
 require 'fileutils'
-require 'progressbar'
 require 'rubygems/installer'
 require 'net/ftp'
+require 'net/http'
 
 module Crate
   #
   # Utiltiy methods useful for many items
   module Utils
+
+    def logger
+      @logger ||= Logging::Logger['Crate::Utils']
+    end
+    extend self 
+
     #
     # Changes into a directory and unpacks the archive.
     #
@@ -27,6 +32,7 @@ module Crate
       end
     end
 
+
     #
     # Verify the given file against a digest value.  If the digest value is nil
     # then it is a no-op.
@@ -35,30 +41,20 @@ module Crate
       return ( against ? against.verify( file ) : true )
     end
 
+
     #
-    # download the given URI to a specified location, show progress with a
-    # progress bar.
+    # download the given URI to a specified location
     #
     def download( uri, to )
       to_dir = File.dirname( to )
       FileUtils.mkdir_p( to_dir ) unless File.directory?( to_dir )
 
-      # open-uri doesn't work with passive mode ftp in ruby versions prior to 1.9
       begin
-        if uri.instance_of? URI::FTP
-          Net::FTP.open( uri.host ) do |ftp|
-            ftp.passive = true
-            ftp.login
-            ftp.getbinaryfile( uri.path, to )
-          end
+        case uri
+        when URI::FTP  : download_via_ftp( uri, to )
+        when URI::HTTP : download_via_http( uri, to )
         else
-          pbar = nil 
-          File.open( to , "w" ) do |outf|      
-            uri.open( :content_length_proc => lambda { |t| pbar = ::ProgressBar.new( File.basename( local_source ), t ) if  t && 0 < t  },  
-                      :progress_proc       => lambda { |s| pbar.set s if pbar } ) do |inf|
-              outf.write inf.read
-            end        
-          end
+          raise ::Crate::Error, "Downloading is only supported via FTP or HTTP at this time"
         end
       rescue => e
         puts
@@ -67,7 +63,41 @@ module Crate
       end
     end
 
+
+    # download vi FTP
     #
+    def download_via_ftp( uri, to )
+      Net::FTP.open( uri.host ) do |ftp|
+        ftp.passive = true
+        ftp.login
+        ftp.getbinaryfile( uri.path, to )
+      end
+    end
+
+
+    # download via HTTP, following redirects
+    #
+    def download_via_http( uri, to, limit = 10 )
+      uri = URI.parse( uri ) unless URI === uri
+      raise ::Crate::Error, "Reached HTTP Redirect limit with #{uri.to_s}" if limit == 0
+      Net::HTTP.start( uri.host, uri.port ) do |http|
+        http.request_get( uri.request_uri ) do |response|
+          case response
+          when Net::HTTPSuccess then
+            Utils.logger.debug "success! saving to #{to}"
+            File.open( to, "wb" ) do |outf|
+              response.read_body { |bytes| outf.write bytes }
+            end
+          when Net::HTTPRedirection then
+            Utils.logger.debug "redirect to #{response['location']}"
+            download_via_http( response['location'], to, limit - 1 )
+          else response.error!
+          end
+        end
+      end
+    end
+
+    
     # Apply the given patch file in a particular directory
     #
     def apply_patch( patch_file, location )
@@ -75,10 +105,5 @@ module Crate
         %x[ patch -p0 < #{patch_file} ]
       end
     end
-
-    #
-    # Wrap a command sending its output to the the Crate.project logger at the
-    # debug level
-    #
   end
 end

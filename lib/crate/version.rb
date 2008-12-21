@@ -6,8 +6,8 @@
 module Crate
   module Version
     MAJOR   = 0
-    MINOR   = 1
-    BUILD   = 1
+    MINOR   = 2
+    BUILD   = 0
 
     def to_a 
       [MAJOR, MINOR, BUILD]

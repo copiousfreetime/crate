@@ -1,4 +1,16 @@
 = Changelog
+== Version 0.2.0 2008-12-20
+
+=== Minor enhancement
+* use Net::FTP for passive ftp [ jonbrenner ]
+* use Net::HTTP instead of open-uri
+
+=== Bugfixes
+* update sha1 hash for amalgalite gem [ jonbrenner ]
+* update dependencies, removing progressbar and adding logging
+* fix digest check task [ jonbrenner ]
+* set binary mode for writing downloaded files to disk
+
 == Version 0.1.1
 
 * fix packing of ruby stdlib extension's pure ruby components
