@@ -1,0 +1,16 @@
+Next Release:
+    - add in a list of rubylibs to be packed into the top level task similarly
+      to what exists for the extensions
+    - expose the lib.db and app.db files to the commandline with reasonable
+      defaults.  automatically add the 'lib.db' and 'app.db'.  If the app.db
+      doesn't exist do nothing with it. 
+    - add in dependency between default and :ruby tasks
+
+Future Ideas:
+    - switch to Tap for build system
+    - incorporate items from rake-compiler
+    - cross compiler targets
+
+Web app support:
+    - db filesystem 
+    - patch view loading for architectures to load from db
