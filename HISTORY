@@ -1,7 +1,17 @@
 = Changelog
+== Version 0.2.1 2009-01-18
+
+=== Enhancements
+* update with new amalgalite vesion
+* update to new openssl version
+
+=== Bugfixes
+* fix missing libs on final build
+* fix lib ordering on final build
+
 == Version 0.2.0 2008-12-20
 
-=== Minor enhancement
+=== Enhancements
 * use Net::FTP for passive ftp [ jonbrenner ]
 * use Net::HTTP instead of open-uri
 
