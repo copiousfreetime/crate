@@ -158,10 +158,11 @@ CRATE_BOOT_H
     def link_project
       link_options = %w[ CFLAGS XCFLAGS LDFLAGS ].collect { |c| compile_params[c] }.join(' ')
       Dir.chdir( ::Crate.ruby.pkg_dir ) do
-        dot_a = FileList[ "**/*.a" ]
+        dot_a = FileList[ "ext/**/*.a" ]
+        dot_a << %w[ libssl.a libcrypto.a libz.a libruby-static.a  ] # order is important on the last 4
         dot_o = [ "ext/extinit.o", File.join( project_root, "crate_boot.o" )]
         libs = compile_params['LIBS']
-        cmd = "#{compile_params['CC']} #{link_options} #{dot_o.join(' ')} #{dot_a.join(' ')} -o #{File.join( dist_dir, name) }"
+        cmd = "#{compile_params['CC']} #{link_options} #{dot_o.join(' ')} #{libs} #{dot_a.join(' ')} -o #{File.join( dist_dir, name) }"
         logger.debug cmd
         sh cmd
       end
@@ -174,7 +175,7 @@ CRATE_BOOT_H
       lib_db = File.join( dist_dir, "lib.db" )
       app_db = File.join( dist_dir, "app.db" )
       directory dist_dir
-      packer_cmd = "~/Projects/amalgalite/bin/amalgalite-pack"
+      packer_cmd = "amalgalite-pack"
 
       task :pack_ruby => dist_dir do
         prefix = File.join( ::Crate.ruby.pkg_dir, "lib" )
