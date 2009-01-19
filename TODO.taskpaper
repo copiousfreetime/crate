@@ -4,9 +4,9 @@ Next Release:
     - expose the lib.db and app.db files to the commandline with reasonable
       defaults.  automatically add the 'lib.db' and 'app.db'.  If the app.db
       doesn't exist do nothing with it. 
-    - add in dependency between default and :ruby tasks
 
 Future Ideas:
+    - add in dependency between default and :ruby tasks
     - switch to Tap for build system
     - incorporate items from rake-compiler
     - cross compiler targets
