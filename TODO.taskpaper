@@ -5,6 +5,10 @@ Next Release:
       defaults.  automatically add the 'lib.db' and 'app.db'.  If the app.db
       doesn't exist do nothing with it. 
     - Download via HTTP Proxy option.
+    - make sure that the packages that get packed are the ones that are in the
+      recipes
+    - update to newest amalgalite
+
 
 Future Ideas:
     - add in dependency between default and :ruby tasks
