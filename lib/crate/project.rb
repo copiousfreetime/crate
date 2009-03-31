@@ -184,6 +184,13 @@ CRATE_BOOT_H
         cmd = "#{packer_cmd} --drop-table --db #{lib_db} --compress --strip-prefix #{prefix} #{prefix}" 
         logger.debug cmd
         sh "#{cmd} > /dev/null"
+       
+        prefix = ::Crate.ruby.pkg_dir
+        logger.info "Packing rbconfig into #{lib_db}"
+        cmd = "#{packer_cmd} --db #{lib_db} --compress --strip-prefix #{prefix} #{File.join( prefix, "rbconfig.rb" )}" 
+        logger.debug cmd
+        sh "#{cmd} > /dev/null"
+
       end
 
       task :pack_ruby_ext => dist_dir do

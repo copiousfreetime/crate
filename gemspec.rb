@@ -23,7 +23,7 @@ Crate::GEM_SPEC = Gem::Specification.new do |spec|
   spec.add_dependency( "rake", "~> 0.8.3")
   spec.add_dependency( "configuration", "~> 0.0.5")
   spec.add_dependency( "archive-tar-minitar")
-  spec.add_dependency( "amalgalite", "~> 0.7")
+  spec.add_dependency( "amalgalite", "~> 0.8")
   spec.add_dependency( "logging", "~> 0.9" )
 
 

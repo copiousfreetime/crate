@@ -1,0 +1,44 @@
+Project:
+    download common target dependencies and verify:
+    build_targets:
+        - linux ruby
+        - mac ruby
+        - win ruby
+    build_app:
+        - generate new .c .h
+        - compile against static ruby
+    pack( dir ):
+        - amalgalite
+        - stdlib
+        - gems
+        - app code( its just another gem )
+        - app code( vendor, app dir )
+   
+    pack( filesystem ):
+        
+
+
+    
+Pack( dir, db ):
+    - look for every item in the dir that is a ruby file
+    - pack it by dirname into the db in a table
+
+Prep(something):
+    - download
+    - verify
+    - unpack
+    - patch
+
+ruby dep Downloads:
+    - zlib
+    - openssl
+
+each Target:
+    - Prep( target )
+    - foreach gem
+        - prep( gem )
+        - integrate - append to setup, 
+    - build
+    - install ( to destdir )
+
+

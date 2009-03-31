@@ -77,6 +77,8 @@ module Crate
           format.spec.files.each do |f|
             if f.index( from ) == 0 then
               src_file = f.sub( from, '' )
+              next unless File.file?( src_file )
+              next if File.directory?( src_file )
               dest_file = File.join( to, src_file ) 
               dest_dir = File.dirname( dest_file )
               logger.debug "copy #{src_file} to #{dest_file}"
