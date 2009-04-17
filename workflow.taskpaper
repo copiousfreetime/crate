@@ -2,8 +2,11 @@ Project:
     download common target dependencies and verify:
     build_targets:
         - linux ruby
+            - for ruby X.Y
         - mac ruby
+            - for ruby X.Y
         - win ruby
+            - for ruby X.Y
     build_app:
         - generate new .c .h
         - compile against static ruby
