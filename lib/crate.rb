@@ -14,7 +14,7 @@ module Crate
   class Error < StandardError; end
 end
 
-require 'rubygems'
-require 'crate/paths'
-require 'crate/version'
-require 'crate/log'
+require File.join( File.expand_path(__FILE__).sub(/\.rb$/,''), "paths" )
+
+require Crate.lib_path( 'version' )
+require Crate.lib_path( 'log' )

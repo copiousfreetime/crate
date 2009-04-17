@@ -20,7 +20,7 @@ module Crate
     end
 
     def lib_path( *args )
-      root_path( "lib", *args )
+      root_path( "lib", "crate",  *args )
     end 
 
     def spec_path( *args )

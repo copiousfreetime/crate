@@ -1,3 +1,9 @@
+Usage:
+    - cratify directory
+    - cratify some-1.0.0.gem
+    - in project:
+        - crate commands w/ Cratefile configuration
+
 Project:
     download common target dependencies and verify:
     build_targets:
