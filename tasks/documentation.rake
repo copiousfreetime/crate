@@ -8,15 +8,20 @@ if rdoc_config = Configuration.for_if_exist?('rdoc') then
 
   namespace :doc do
 
+    require 'rdoc'
     require 'rake/rdoctask'
+    require 'doc'
 
     # generating documentation locally
     Rake::RDocTask.new do |rdoc|
       rdoc.rdoc_dir   = rdoc_config.output_dir
       rdoc.options    = rdoc_config.options
+      rdoc.options << "--fmt" << "cdoc"
+
       rdoc.rdoc_files = rdoc_config.files
       rdoc.title      = rdoc_config.title
       rdoc.main       = rdoc_config.main_page
+      rdoc.template   = 'cdoc/cdoc/_html_template'
     end 
 
     if rubyforge_config = Configuration.for_if_exist?('rubyforge') then

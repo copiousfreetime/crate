@@ -5,9 +5,9 @@
 
 module Crate
   module Version
-    MAJOR   = 0
-    MINOR   = 2
-    BUILD   = 2
+    MAJOR   = 1
+    MINOR   = 0
+    BUILD   = 0
 
     def to_a 
       [MAJOR, MINOR, BUILD]
@@ -17,10 +17,14 @@ module Crate
       to_a.join(".")
     end
 
-    module_function :to_a
-    module_function :to_s
+    def to_hash
+      { :major => MAJOR, :minor => MINOR, :build => BUILD }
+    end
 
     STRING = Version.to_s
+    extend self
   end
   VERSION = Version.to_s
+
+  extend Version
 end

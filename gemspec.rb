@@ -25,6 +25,7 @@ Crate::GEM_SPEC = Gem::Specification.new do |spec|
   spec.add_dependency( "archive-tar-minitar")
   spec.add_dependency( "amalgalite", "~> 0.8")
   spec.add_dependency( "logging", "~> 0.9" )
+  spec.add_dependency( "tap", "= 0.12.4")
 
 
   if rdoc = Configuration.for_if_exist?('rdoc') then
