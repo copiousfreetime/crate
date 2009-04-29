@@ -5,7 +5,14 @@ module Crate
 
   ::Logging::Logger[self].level = :info
 
+  # Return the top level logger, initializing the Crate logging system if
+  # necessary.
   def self.logger
+    Crate::Log.init unless Crate::Log.initialized?
+    self._logger
+  end
+
+  def self._logger # :nodoc:
     ::Logging::Logger[self]
   end
 
@@ -16,20 +23,29 @@ module Crate
     def init
 
       if defined? @initialized and ( not @appender.nil? ) then
-        Crate.logger.remove_appenders( @appender )
+        Crate._logger.remove_appenders( @appender )
         @appender.close
         @appender = nil
       end
 
-      FileUtils.mkdir_p( directory ) unless File.directory?( directory )
-      Crate.logger.add_appenders( self.appender )
-      Crate.logger.info "Crate version #{Crate::VERSION}"
-      self.level = configuration.level
-      Crate.logger.add_appenders( Logging::Appender.stdout )
+      # TODO move these into a crate commandline
+      #FileUtils.mkdir_p( directory ) unless File.directory?( directory )
+      #Crate.logger.add_appenders( self.appender )
+      #Crate.logger.info "Crate version #{Crate::VERSION}"
+      #self.level = configuration.level
+      Crate._logger.add_appenders( Logging::Appender.stdout )
       Logging::Appender.stdout.layout = self.console_layout
-      Logging::Appender.stdout.level = :off
+      Logging::Appender.stdout.level = :info
 
       @initialized = true
+    end
+
+    def silence!
+      Logging::Appender.stdout.level = :off
+    end
+
+    def initialized?
+      @initialized
     end
 
     def configuration
@@ -50,15 +66,15 @@ module Crate
     end
 
     def default_directory
-      configuration.dirname || ::Crate::Paths.log_path 
+      configuration.dirname || ::Crate::Paths.log_path
     end
 
 
     def directory
-      @directory ||= default_directory 
+      @directory ||= default_directory
       if @directory != default_directory then
-        # directory has changed on us 
-        @directory = default_directory 
+        # directory has changed on us
+        @directory = default_directory
       end
       return @directory
     end

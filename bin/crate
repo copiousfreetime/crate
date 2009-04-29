@@ -1,10 +1,5 @@
 #!/usr/bin/env ruby
-
-begin
-  require 'crate'
-rescue LoadError
-  $: << File.expand_path( File.join( File.dirname( __FILE__ ), %w[ .. lib ] ) ) 
-  require 'crate'
-end
+$:.unshift File.expand_path( File.join( File.dirname( __FILE__ ), %w[ .. lib ] ) )
+require 'crate'
 
 ::Crate.cli.run( ARGV, ENV )

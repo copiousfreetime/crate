@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+$:.unshift File.expand_path( File.join( File.dirname( __FILE__ ), %w[ .. lib ] ) )
+require 'crate'
+
+begin
+  ::Crate.ify( ARGV )
+  exit 0
+rescue => e
+  $stderr.puts "ERROR: #{e.message}"
+  Crate.logger.error e.message
+  e.backtrace.each do |l|
+    Crate.logger.warn l.strip
+  end
+  exit 1
+end
+
