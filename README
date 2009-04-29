@@ -22,6 +22,27 @@ extracting executable for Windows; a shar archive, rpm or tarball for Unixes.
 
 gem install crate
 
+== SYNOPSIS
+
+First, cratetify your application or gem:
+
+  crateify ./myapp           # => path to local project
+  crateify ./mygem-1.0.0.gem # => path to local gem
+  crateify mygem             # => remotely fetches
+
+Then enter the newly project/gem directory and build
+
+  cd myapp
+  crate
+
+Wait for everything to complete, it could be a while depending on your system.
+You will have a new directory in the app or gem directory called 'crate'.  In
+'crate/dist' will be the items to distribute.
+
+  crate/dist/myapp
+  crate/dist/lib.db
+  crate/dist/app.db
+
 == LICENSE
 
 Copyright (c) 2008, Jeremy Hinegardner

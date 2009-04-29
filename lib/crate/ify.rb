@@ -21,14 +21,42 @@ module Crate
     # The target platform on which the application will run.
     config 'target_platform', ::Config::CONFIG['arch']
 
-    # define :identify_source,  IdentifySource, { :source => process_arg }
-    # define :setup_
-
     def process( gem_or_dir )
-      logger.info "Crateifing #{gem_or_dir}"
+      if stat = File.stat( gem_or_dir ) then
+        if stat.file? and File.extname( gem_or_dir ) == ".gem" then
+          self.seq( ::Crate::Task::Unpack.new( :file => gem_or_dir ) )
+        elsif stat.directory? then
+          self.enq( ::Crate::Task::InstallCratefile.new( :directory => gem_or_dir ) )
+
+          logger.info "crateify directory #{gem_or_dir}"
+        else
+          raise ArgumentError, "#{gem_or_dir} is not a gem or a directory"
+        end
+      else
+        logger.info "crateify remote gem #{gem_or_dir}"
+      end
     end
 
     def workflow
+      fetch_start = ::Crate::Task::FetchGem.new
+      fetch_start.sequence(
+        ::Crate::Task::Unpack.new,
+        ::Crate::Task::InstallCratefile.new )
+
+      unpack_start = ::Crate::Task::Unpack.new
+      unpack_start.sequence( ::Crate::Task::InstallCratefile.new )
+
+      install_start = ::Crate::Task::InstallCratefile.new
+
+      switch( fetch_start, unpack_start, install_start) do |audit|
+        case audit.trail.last.value
+        when :remote_gem
+          return 0
+        when :local_gem
+          return 1
+        end
+
+      end
     end
 
   end
