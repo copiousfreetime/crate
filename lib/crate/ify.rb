@@ -6,7 +6,7 @@ module Crate
   # Manage the anlysis and setup of an existing gem or project into a crateified
   # system.
   #
-  # When called from the commandline, There is a single required parameter.  The
+  # When called from the commandline, there is a single required parameter.  The
   # name of gem, the gem file, or the application directory.  Generally
   # executed as :
   #
@@ -22,43 +22,29 @@ module Crate
     config 'target_platform', ::Config::CONFIG['arch']
 
     def process( gem_or_dir )
-      if stat = File.stat( gem_or_dir ) then
-        if stat.file? and File.extname( gem_or_dir ) == ".gem" then
-          self.seq( ::Crate::Task::Unpack.new( :file => gem_or_dir ) )
-        elsif stat.directory? then
-          self.enq( ::Crate::Task::InstallCratefile.new( :directory => gem_or_dir ) )
-
-          logger.info "crateify directory #{gem_or_dir}"
-        else
-          raise ArgumentError, "#{gem_or_dir} is not a gem or a directory"
+      logger.info "process( #{gem_or_dir} )"
+      if File.exist?( gem_or_dir ) then
+        if stat = File.stat( gem_or_dir ) then
+          if stat.file? and File.extname( gem_or_dir ) == ".gem" then
+            logger.info "crateify gem #{gem_or_dir}"
+            self.sequence( ::Crate::Task::Unpack.new( :file => gem_or_dir ),
+                           ::Crate::Task::InstallCratefile.new( config.to_hash ) )
+          elsif stat.directory? then
+            logger.info "crateify directory #{gem_or_dir}"
+            self.sequence( ::Crate::Task::InstallCratefile.new( config.to_hash.merge( :directory => gem_or_dir ) ) )
+          else
+            logger.error stat.inspect
+            raise ArgumentError, "#{gem_or_dir} is not a gem or a directory"
+          end
         end
       else
         logger.info "crateify remote gem #{gem_or_dir}"
+        self.sequence( ::Crate::Task::FetchGem.new( :gem => gem_or_dir ),
+                       ::Crate::Task::Unpack.new,
+                       ::Crate::Task::InstallCratefile.new( config.to_hash ) )
       end
+      config
     end
-
-    def workflow
-      fetch_start = ::Crate::Task::FetchGem.new
-      fetch_start.sequence(
-        ::Crate::Task::Unpack.new,
-        ::Crate::Task::InstallCratefile.new )
-
-      unpack_start = ::Crate::Task::Unpack.new
-      unpack_start.sequence( ::Crate::Task::InstallCratefile.new )
-
-      install_start = ::Crate::Task::InstallCratefile.new
-
-      switch( fetch_start, unpack_start, install_start) do |audit|
-        case audit.trail.last.value
-        when :remote_gem
-          return 0
-        when :local_gem
-          return 1
-        end
-
-      end
-    end
-
   end
 
   # put a handle into the top level.
