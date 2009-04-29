@@ -20,13 +20,13 @@ Crate::GEM_SPEC = Gem::Specification.new do |spec|
   spec.executables  = pkg.files.bin.collect { |b| File.basename(b) }
 
   # add dependencies here
-  spec.add_dependency( "rake", "~> 0.8.3")
   spec.add_dependency( "configuration", "~> 0.0.5")
   spec.add_dependency( "archive-tar-minitar")
-  spec.add_dependency( "amalgalite", "~> 0.8")
+  spec.add_dependency( "amalgalite", "~> 0.9")
   spec.add_dependency( "logging", "~> 0.9" )
   spec.add_dependency( "tap", "= 0.12.4")
 
+  spec.add_development_dependency( "rake", "~> 0.8.3")
 
   if rdoc = Configuration.for_if_exist?('rdoc') then
     spec.has_rdoc         = true
