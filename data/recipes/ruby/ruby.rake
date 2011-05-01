@@ -1,7 +1,7 @@
 #
-# Crate recipe for ruby version 1.2.3
+# Crate recipe for ruby version 1.8.7-p302
 #
-Crate::Ruby.new( "ruby", "1.8.6-p287") do |t|
+Crate::Ruby.new( "ruby", "1.8.7-p302") do |t|
   t.depends_on( "openssl" )
   t.depends_on( "zlib" )
 
@@ -9,8 +9,8 @@ Crate::Ruby.new( "ruby", "1.8.6-p287") do |t|
   t.integrates( "arrayfields" )
   t.integrates( "configuration" )
 
-  t.upstream_source  = "ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.6-p287.tar.gz"
-  t.upstream_md5     = "f6cd51001534ced5375339707a757556"
+  t.upstream_source  = "ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p302.tar.gz"
+  t.upstream_md5     = "f446550dfde0d8162a6ed8d5a38b3ac2"
 
   ENV["CPPFLAGS"]= "-I#{File.join( t.install_dir, 'usr', 'include')}"
   ENV["LDFLAGS"] = "-L#{File.join( t.install_dir, 'usr', 'lib' )}"
