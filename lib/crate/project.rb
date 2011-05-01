@@ -114,7 +114,7 @@ module Crate
         @compile_params = {}
         Dir.chdir( ::Crate.ruby.pkg_dir ) do
           %w[ CC CFLAGS XCFLAGS LDFLAGS CPPFLAGS LIBS ].each do |p|
-            @compile_params[p] = %x( ./miniruby -I. -rrbconfig -e 'puts Config::CONFIG["#{p}"]' ).strip
+            @compile_params[p] = %x( ./miniruby -I. -rrbconfig -e 'puts Config::CONFIG["#{p}"] || ""' ).strip
           end
         end
       end
